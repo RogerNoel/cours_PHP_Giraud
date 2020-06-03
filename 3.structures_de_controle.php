@@ -264,7 +264,45 @@
     echo "true</br>";
     ?>
     <h2>Les opérateurs ternaire et fusion null</h2>
-    <!-- page 83 -->
+    <p>Ces deux opérateurs vont nous permettre d'écrire des conditions plus condensées. Elles vont permettre d'accélérer la vitesse d'exécution du code.</p>
+    <h3>L'opérateur ternaire</h3>
+    <p><strong>Attention:</strong> il faut éviter d'imbriquer les structures ternaires.</br>
+    La structure est <em>test ? code si vrai : code si faux</em>. </p>
+    <?php
+        $age = 16;
+        echo $age >= 18 ? "majeur</br>" : "mineur</br>";
+        // ci-après, on stocke qqch dans $texte selon le résultat de la ternaire
+        $texte = $age > 5 ? "plus de 5" : $age = 15;
+        echo "texte vaut $texte </br>";
+        echo "age vaut $age</br>";
+        echo "Si on omet la partie entre le ? et le : , 1 (true) sera renvoyé si la condition se vérifie</br>";
+        echo $age > 12 ? : "faux</br>";
+    ?>
 
+    <h3>L'opérateur fusion null</h3>
+    <p>La structure est <em>test ?? code si résultat du test est NULL</em>.</p>
+    <?php
+        $test;
+        echo $test ?? "NULL</br>";
+        $test2 = "roger</br>";
+        echo $test2 ?? "NULL</br>";
+    ?>
+    <h2>L'instruction switch</h2>
+    <?php
+        $cote = 10;
+        switch($cote) {
+            case 0:
+                echo '$cote vaut ' . $cote . ": note nulle</br>";
+                break;
+            case 1:
+                echo '$cote vaut ' . $cote . ": note insuffisante</br>";
+                break;
+            case 2:
+                echo '$cote vaut ' . $cote . ": note faible</br>";
+                break;
+            default:
+                echo '$cote vaut ' . $cote . ": note suffisante</br>";
+        }
+    ?>
 </body>
 </html>
