@@ -1,0 +1,1 @@
+Utilisation du mode r pour ouverture en lecture seule.
