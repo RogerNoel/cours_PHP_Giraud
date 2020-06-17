@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manipulation de fichiers</title>
+    <style>
+        .operation { font-size: 15px; text-align: left; }
+        tr td:first-child { font-size: 30px; }
+        table {border-collapse: collapse;}
+        td {border: 1px solid purple; text-align: center; padding: 5px; }
+        thead { font-weight: bold; }
+    </style>
 </head>
 <body>
     <h1>Manipuler des fichiers en PHP</h1>
@@ -57,8 +64,8 @@
             <li>r+ - ouverture en lecture et écriture</li>
             <li>a - ouvre un fichier en écriture seule en conservant les données existantes.Si le fichier n'existe pas, PHP tente de le créer.</li>
             <li>a+ - ouvre un fichier en lecture et écriture en conservant les données existantes. Si le fichier n'existe pas, PHP tente de le créer.</li>
-            <li>w - ouverture en écriture seule. Si le fichier existe, les infos existantes seront supprimées, s'il n'exispe pas, il sera créé.</li>
-            <li>w+ - ouverture en lecture et écriture. Si le fichier existe, les infos existantes seront supprimées, s'il n'exispe pas, il sera créé.</li>
+            <li>w - ouverture en écriture seule. Si le fichier existe, les infos existantes seront supprimées, s'il n'existe pas, il sera créé.</li>
+            <li>w+ - ouverture en lecture et écriture. Si le fichier existe, les infos existantes seront supprimées, s'il n'existe pas, il sera créé.</li>
             <li>x - créé un nouveau fichier accessible seulement en écriture. Retourne false erreur si le fichier existe déjà.</li>
             <li>x+ - créé un nouveau fichier accessible en lecture et en écriture. Retourne false erreur si le fichier existe déjà.</li>
             <li>c - ouvre un fichier pour écriture seulement. Si le fichier n'existe pas, il sera créé. S'il existe, les infos seront conservées.</li>
@@ -108,17 +115,117 @@
     ?>
     <h3>Utilisation de fgetc()</h3>
     <p>Cette fonction permet de lire un fichier caractère par caractère, par exemple pour récupérer un caractère en particulier ou pour arrêter la lecture lorsqu’on arrive à un certain caractère.</br>
-    fgetc() s’utilise exactement comme fgets(), et chaque nouvel appel à la fonction va nous
-permettre de lire un nouveau caractère de notre fichier. Notez que les espaces sont bien
-entendus considérés comme des caractères.</p>
-<?php
-    echo 'Utilisation de fgetc() qui permet à chaque appel, de récupérer les caractères un par un: </br>';
-    $ressourceTexte = fopen('texte.txt', 'rb');
-    echo 'Premier appel: '. fgetc($ressourceTexte).'</br>';
-    echo 'Second appel: '. fgetc($ressourceTexte).'</br>';
-    echo 'Troisième appel: '. fgetc($ressourceTexte).'</br>';
-    echo 'Quatrième appel: '. fgetc($ressourceTexte).'</br>';
-?>
-    
+    fgetc() s’utilise exactement comme fgets(), et chaque nouvel appel à la fonction va nous permettre de lire un nouveau caractère de notre fichier. Notez que les espaces sont bien entendus considérés comme des caractères.</p>
+    <?php
+        echo 'Utilisation de fgetc() qui permet à chaque appel, de récupérer les caractères un par un: </br>';
+        $ressourceTexte = fopen('texte.txt', 'rb');
+        echo 'Premier appel: '. fgetc($ressourceTexte).'</br>';
+        echo 'Second appel: '. fgetc($ressourceTexte).'</br>';
+        echo 'Troisième appel: '. fgetc($ressourceTexte).'</br>';
+        echo 'Quatrième appel: '. fgetc($ressourceTexte).'</br>';
+    ?>
+    <h2>Trouver la fin d'un fichier de taille inconnue</h2>
+    <p>En pratique, cependant, nous utiliserons généralement les fichiers pour stocker des informations non connues à l’avance. Il sera donc impossible de prévoir la taille de ces fichiers et on risque donc de ne pas pouvoir utiliser les fonctions fgets() et fgetc() de manière optimale.</p>
+    <p>Il existe plusieurs moyens de déterminer la taille ou la fin d’un fichier.</br>
+    La fonction filesize(), par exemple, va lire la taille d’un fichier.</br>
+    Dans le cas présent, cependant, nous cherchons plutôt à <u>déterminer où se situe la fin d’un fichier</u> (ce qui n’est pas forcément équivalent à la taille d’un fichier à cause de la place du curseur, notion que nous allons voir en détail par la suite).</p>
+    <p>La fonction PHP <strong>feof()</strong> (« end of the file ») va nous permettre de savoir si la fin d’un fichier a été atteinte ou pas. <em>Dès que la fin d’un fichier est atteinte, cette fonction va renvoyer la valeur true. Avant cela, elle renverra la valeur false.</em>On va donc pouvoir utiliser cette fonction pour boucler dans un fichier de taille inconnue.</p>
+    <?php
+        $newResource = fopen('texte.txt', 'rb');
+        while(feof($newResource)==false){
+            $ligne = fgets($newResource); //fgets() pour récupérer ligne par ligne
+            echo 'La ligne: "'. $ligne . '" contient ' . strlen($ligne) . ' caractères.</br>';
+        }
+    ?>
+    <p><strong>Note:</strong> le retour à la ligne compte comme un caractère et fgets() s'arrête après ce passage à la ligne. C'est la raison pour laquelle on compte un caractère de plus que ce qu'on peut s'attendre, sauf la dernière évidemment</p>
+    <h2>La place du curseur interne ou pointeur de fichier</h2>
+    <p>La position du curseur (ou « pointeur de fichier ») va impacter le résultat de la plupart des manipulations qu’on va pouvoir effectuer sur les fichiers.</br>
+    Il est donc essentiel de toujours savoir où se situe ce pointeur et également de savoir comment le bouger.</p>
+    <p>Le curseur ou pointeur est l’endroit dans un fichier <u>à partir duquel</u> une opération va être faite. Pour donner un exemple concret, le curseur dans un document Word correspond à la barre clignotante.</p>
+    <p>Ce curseur indique l’emplacement à partir duquel vous allez écrire votre requête ou supprimer un caractère, etc. Le curseur dans les fichiers va être exactement la même chose à la différence qu’ici on ne peut pas le voir concrètement.</p>
+    <table>
+        <thead>
+            <td>Mode utilisé</td>
+            <td>Opération</td>
+            <td>Position du pointeur de fichier</td>
+        </thead>
+        <tbody>
+            <tr>
+                <td>r/r+</td>
+                <td class="operation" >ouverture en lecture seule/ouverture en lecture et écriture</td>
+                <td>au début du fichier</td>
+            </tr>
+            <tr>
+                <td>a/a+</td>
+                <td class="operation" >ouvre un fichier en écriture seule/lecture en conservant les données existantes.</td>
+                <td>à la fin du fichier</td>
+            </tr>
+            <tr>
+                <td>w/w+</td>
+                <td class="operation" >ouverture en écriture seule/écriture. Si le fichier existe, les infos existantes seront supprimées.</td>
+                <td>au début du fichier</td>
+            </tr>
+            <tr>
+                <td>x/x+</td>
+                <td class="operation" >créé un nouveau fichier accessible seulement en écriture/lecture et écriture. Retourne false erreur si le fichier existe déjà.</td>
+                <td>au début du fichier</td>
+            </tr>
+            <tr>
+                <td>c/c+</td>
+                <td class="operation" >ouvre un fichier pour écriture seulement/lecture et écriture. Si le fichier n'existe pas, il sera créé. S'il existe, les infos seront conservées.</td>
+                <td>au début du fichier</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>Ensuite, vous devez également savoir que <u>certaines fonctions vont modifier la place du curseur à chaque exécution</u>: cela va par exemple être le cas des fonctions fgets() et fgetc() qui servent à lire un fichier ligne par ligne ou caractère par caractère. En effet, la première fois qu’on appelle fgets() par exemple, le pointeur est généralement au début de notre fichier et c’est donc la première ligne de notre fichier est lue par défaut. Cependant, lors du deuxième appel à cette fonction, c’est bien la deuxième ligne de notre fichier qui va être lue.</br>
+    Ce comportement est justement dû au fait que la fonction fgets() déplace le pointeur de fichier du début de la première ligne au début de la seconde ligne dans ce cas précis.</br>
+    <strong>Pour savoir où se situe notre pointeur de fichier</strong>, on peut utiliser la fonction <strong>ftell()</strong> qui renvoie la position courante du pointeur. Nous allons devoir lui passer la valeur renvoyée par fopen() pour qu’elle fonctionne correctement.</p>
+    <?php
+        $ressource2 = fopen('texte.txt', 'rb');
+        echo 'Le pointeur se trouve en position '. ftell($ressource2).'</br>';
+        echo "</br>Test avec fgets()</br>";
+        $i = 1;
+        while(feof($ressource2)==false) {
+            echo "Ligne n° " . $i . "</br>";
+            echo 'Le curseur se trouve en position ' . ftell($ressource2).'</br>';
+            $ligne = fgets($ressource2);
+            $i++;
+        }
+    ?>
+    <h3>Déplacer le curseur manuellement</h3>
+    <p>Pour commencer la lecture d’un fichier à partir d’un certain point, ou pour écrire dans un fichier à partir d’un endroit précis ou pour toute autre manipulation de ce type, <em>nous allons avoir besoin de contrôler la position du curseur</em>. Pour cela, nous allons pouvoir utiliser la fonction <strong>fseek()</strong>.</br>
+    Cette fonction va prendre en arguments
+        <ul>
+            <li>l’information renvoyée par fopen()</li>
+            <li>un nombre correspondant à la nouvelle position en octets du pointeur.</li>
+        </ul>
+    La nouvelle position du pointeur sera par défaut calculée par rapport au début du fichier.</br>
+    Pour modifier ce comportement et <em>faire en sorte que le nombre passé s’ajoute à la position courante du curseur, on peut ajouter la constante SEEK_CUR en troisième argument de fseek()</em>.</br>
+    Notez cependant que si vous utilisez les modes a et a+ pour ouvrir votre fichier, utiliser la fonction fseek() ne produira aucun effet et votre curseur se placera toujours en fin de fichier.</p>
+    <?php
+        $ressource = fopen('texte.txt', 'rb');
+        echo 'Rappel: ftell($ressource) renvoie la position du curseur.</br>';
+        echo 'Le pointeur est au début du fichier, en position ' . ftell($ressource) . '.</br>'; // retourne 0
+        echo 'Rappel: fgetc() lit caractère par caractère à chaque appel.</br>';
+        echo 'La caractère <em>(ftell($res)+1)</em>: ' . (ftell($ressource)+1) . ' est un <em>fgetc($res)</em> ' . fgetc($ressource) . '.</br>'; // retourne 1 et 1
+        echo 'Rappel fseek() positionne le curseur.</br>';
+        echo 'On code <em>fseek($res, 20)</em>.</br>';
+        fseek($ressource, 20);
+        echo 'Le curseur se trouve donc maintenant en position ' . ftell($ressource) . '.</br>'; // retourne 20
+        echo (ftell($ressource)+1) . ' = ' . fgetc($ressource) . '</br>';
+        echo 'Utilisation de <em>SEEK_CUR</em> pour ajouter 40 à la position courante: <em>fseek($res, 40, SEEK_CUR)</em>.</br>';
+        fseek($ressource, 40, SEEK_CUR);
+        echo 'Le caractère ' . (ftell($ressource)+1) . ' est un ' . fgetc($ressource) . '.</br>';
+        echo 'Le caractère ' . (ftell($ressource)+1) . ' est un ' . fgetc($ressource) . '.</br>';
+        echo 'Le caractère ' . (ftell($ressource)+1) . ' est un ' . fgetc($ressource) . '.</br>';
+        echo 'Le caractère ' . (ftell($ressource)+1) . ' est un ' . fgetc($ressource) . '.</br>';
+    ?>
+    <h2>Fermer un fichier</h2>
+    <p>Pour fermer un fichier en PHP, nous utiliserons la fonction <strong>fclose()</strong>.On va une nouvelle fois passer le résultat renvoyé par fopen() en argument de cette fonction. Notez que la fermeture d’un fichier n’est pas strictement obligatoire. Cependant, cela est considéré comme une bonne pratique : cela évite d’user inutilement les ressources de votre serveur.</p>
+    <?php
+        $ressource = fopen('texte.txt', 'rb');
+        fclose($ressource);
+    ?>
+    233
 </body>
 </html>

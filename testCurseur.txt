@@ -1,0 +1,6 @@
+1a2b3c4d
+5e6f7g8h9i
+cours PHP GIRAUD: Pour fermer un fichier en PHP, nous utiliserons la fonction fclose().On va une nouvelle fois passer le résultat renvoyé par fopen() en argument de cette fonction. 
+
+Notez que la fermeture d’un fichier n’est pas 
+strictement obligatoire. Cependant, cela est considéré comme une bonne pratique : cela évite d’user inutilement les ressources de votre serveur.
