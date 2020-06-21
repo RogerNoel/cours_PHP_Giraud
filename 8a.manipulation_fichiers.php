@@ -226,6 +226,5 @@
         $ressource = fopen('texte.txt', 'rb');
         fclose($ressource);
     ?>
-    233
 </body>
 </html>
