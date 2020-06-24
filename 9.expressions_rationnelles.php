@@ -87,7 +87,9 @@
     </table>
     <p class="med_underline">Dans un premier temps, nous allons voir comment utiliser chacune de ces fonctions. Cela permettra de voir immédiatement l’utilité des regex.</br>
     Nous approfondirons par la suite le sujet des expressions régulières en soi.</p>
+
     <h2>Les fonctions <em>preg_match()</em> et <em>preg_match_all()</em></h2>
+
     <p>Les fonctions <em>preg_match() et preg_match_all()</em> vont être les fonctions qu’on va le plus utiliser avec les expressions régulières.</br>
     <strong>Ces deux fonctions permettent de rechercher un schéma dans une chaine de caractères.</strong></br>
     La fonction <strong>preg_match()</strong> va renvoyer la valeur 1 si le schéma recherché est trouvé dans la chaine de caractères ou 0 dans le cas contraire.</br>
@@ -98,17 +100,27 @@
         </ul>
     </p>
     <?php
+    // $resultat = [];
         $texte = file_get_contents('./fichiers/fichier2.txt');
+        $nom = 'Mon nom est Roger Noel';
+        $masqueNom = '/o/';
+        if(preg_match($masqueNom, $nom)){
+            print_r(preg_match_all($masqueNom, $nom, $resultat));
+            echo '</br>';
+            var_dump($resultat);
+        } else {
+            echo 'le masque ne figure pas dans le texte.</br>';
+        }
         $masque = '/hommes/';
         $masque2 = '/des/';
-        var_dump(preg_match($masque, $texte ));
+        var_dump(preg_match($masque, $texte));
         var_dump(preg_match_all($masque2, $texte));
     ?>
     <p>On peut donc passer d’autres arguments aux fonctions preg_match() et preg_match_all(), elles permettent d’effectuer des recherches plus ciblées ou d’obtenir des informations supplémentaires au sujet de notre recherche.
         <ol>
             <li>Le premier argument facultatif sera une variable dans laquelle vont être stockés les résultats de la recherche sous forme d’un tableau.</br>
             Dans le cas de preg_match(), le tableau sera un tableau numéroté. Nous verrons plus loin des exemples concrets. </br>
-            Dans le cas de preg_match_all(), le tableau sera un tableau multidimensionnel ordonné. Nous illustrerons cela lorsque nous aurons une plus grande connaissance des regex.</li>
+            Dans le cas de preg_match_all(), le tableau sera un tableau <u>multidimensionnel ordonné</u>. Nous illustrerons cela lorsque nous aurons une plus grande connaissance des regex.</li>
             <li>Le deuxième argument facultatif de nos fonctions va être un drapeau (une constante) qui permet de modifier la façon dont notre tableau passé en argument précédent va être créé. Nous ne rentrerons pas dans un tel niveau de précision ici.</li>
             <li>Le dernier argument facultatif permet de préciser à partir de quel endroit la recherche doit commencer dans la chaine de caractères à scanner, ceci pour n’effectuer une recherche que sur une partie de chaine. On va ici passer une valeur en octets.</li>
         </ol>
@@ -116,7 +128,7 @@
     <?php
         $masque3 = '/des/';
         echo 'Nombre de "des" dans le texte: ' . preg_match_all($masque3, $texte) . '</br>';
-        preg_match_all($masque3, $texte, $tab2[]);
+        preg_match_all($masque3, $texte, $tab2);
         echo '----------</br>';
         echo 'print_r de $tab2: </br>';
         print_r($tab2);
@@ -124,6 +136,40 @@
         echo 'var_dump de $tab2: </br>';
         var_dump($tab2);
     ?>
-    259
+    <h3>Etude de l'exemple de la page 259</h3>
+    <?php
+        echo 'Initialisation du masque et de la chaîne.</br>';
+        $masque = '/r/';
+        $chaine = 'Je suis Pierre Giraud';
+        echo 'On fait un <em>preg_match($masque, $chaine, $match)</em>.</br>';
+        echo '<strong><em>Conclusion:</em> 
+            <ol>
+                <li>On n\'est pas obligé d\'initialiser le tableau qui servira d\'argument.</li>
+                <li>Quand on initie ce tableau directement en argument, on n\a pas besoin de mettre des crochets [].</li>
+            </ol> </strong>';
+        preg_match($masque, $chaine, $match);
+        echo 'Un tableau $match[] a été créé avec le résultat de la fonction, faisons un print_r() de ce tableau:</br>';
+        print_r($match);
+        echo '</br>Maintenant on fait un preg_match_all($masque, $chaine, $match_all) en créant donc un autre tableau.</br>';
+        preg_match_all($masque, $chaine, $match_all);
+        echo 'On fait un print_r() de ce nouveau tableau $match_all;</br>';
+        print_r($match_all);
+        echo '</br><strong><em>Rappel:</em></strong> preg_match_all() sans l\'argument tableau renvoie le nombre d\'occurences trouvées: </br>';
+        echo 'Le nombre d\'occurences de ' . $match_all[0][0] . ' trouvées est: ' . preg_match_all($masque, $chaine) . '.</br>';
+        echo 'On récupère "l\'exemplaire" du masque soit avec $match[0], soit avec $match_all[0][0], en l\'occurence ici : ' . $match[0] . '.</br>';
+        echo 'Donc, nous avons vu que preg_match_all($masque, $chaine) renvoie le nombre d\'occcurences dans tout le document.</br>
+        Et nous savons que pour déterminer une position de départ pour la recherche, il faut écrire cette position en 5° argument.</br>
+        Mais pour écrire ce 5° argument, il faut bien écrire le 3° et le 4°, même s\'ils ne servent à rien, à savoir:
+            <ul>
+                <li>le 3°: c\'est-à-dire le tableau de récupération des résultats et</li>
+                <li>le 4°: le flag, qui détermine la façon dont le tableau précédent sera créé.</li>
+            </ul>
+        Pour le tableau en 3° argument, on met le nom qu\'on veut puisqu\'on ne l\'utilisera pas; pour le 4° argument, on utilisera la constante PREG_PATTERN_ORDER qui est simplement la constante par défaut.</br>
+        Et donc si on veut commencer la recherche à partir de la 8° position:</br>
+        <em>preg_match_all($masque, $chaine, $onsenfout, PREG_PATTERN_ORDER, 8)</em>.';
+        echo 'codons $res = preg_match_all($masque, $chaine) et faisons un print_r() du résultat:</br>';
+        $res = preg_match_all($masque, $chaine, $x, PREG_PATTERN_ORDER, 8);
+        print_r($res);
+    ?>
 </body>
 </html>
