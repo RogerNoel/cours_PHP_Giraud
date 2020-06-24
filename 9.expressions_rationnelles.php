@@ -171,5 +171,45 @@
         $res = preg_match_all($masque, $chaine, $x, PREG_PATTERN_ORDER, 8);
         print_r($res);
     ?>
+    <h2>Les fonctions preg_filter(), preg_replace(), preg_replace_callback() et preg_replace_callback_array</h2>
+    <p>La fonction <strong>preg_filter()</strong> permet d’effectuer une recherche dans une chaine de caractères selon un schéma de recherche et de remplacer les correspondances par une autre chaine.</br>
+    On va passer trois arguments à cette fonction : un schéma de recherche, une chaine de remplacement et la chaine dans laquelle faire la recherche.</br>
+    La fonction preg_filter() va ensuite renvoyer la chaine transformée mais <em>la chaine de départ ne sera pas modifiée</em>.</p>
+    <?php
+        $masque = '/tom/';
+        $chaine = 'tomber';
+        $chaineTransformee = preg_filter($masque, 'plom', $chaine);
+        echo $chaine . ' est devenu ' . $chaineTransformee . '.</br>';
+    ?>
+    <p>La fonction <strong>preg_replace()</strong> fonctionne exactement comme preg_filter(). La différence entre ces deux fonctions va être dans la valeur retournée si le schéma de recherche n’est pas trouvé dans la chaine de caractères. En effet, dans ce cas-là, la fonction preg_filter() va renvoyer la valeur null (correspondant à l’absence de valeur) tandis que preg_replace() va renvoyer la chaine de caractères de départ.</p>
+    <?php
+        $masque = '/z/';
+        $chaine = 'Roger';
+        echo 'Test négatif avec preg_filter().</br>';
+        echo 'La valeur renvoyée est:</br>';
+        var_dump(preg_filter($masque, 'pwet', $chaine));
+        echo 'Test négatif avec preg_replace(); la valeur renvoyée est:</br>';
+        var_dump(preg_replace($masque, 'pwet', $chaine));
+        echo 'La valeur renvoyé en cas d\'échec est donc bien la chaîne d\'origine.</br>';
+    ?>
+    <p>Finalement, les fonctions <strong>preg_replace_callback()</strong> et <strong>preg_replace_callback_array()</strong> fonctionnent selon le même principe général que preg_replace() à la différence qu’il faudra préciser <em>une fonction de rappel</em> plutôt qu’une valeur de remplacement.</br>
+    Ce sujet est un peu complexe, nous laisserons donc cette fonction de côté pour l’instant.</p>
+    <h2>La fonction preg_grep()</h2>
+    <p>La fonction <strong>preg_grep()</strong> va nous permettre de rechercher un certain schéma dans un tableau. Les résultats trouvés (les correspondances) seront renvoyés dans un <u>nouveau tableau en conservant les indices du premier tableau</u>.</p>
+    <?php
+        $prenoms = ['nath', 'tom', 'manon', 'nathalie'];
+        $masque = '/nath/';
+        var_dump(preg_grep($masque, $prenoms));
+    ?>
+    <h2>La fonction grep_split()</h2>
+    <p>La fonction <strong>preg_split()</strong> va éclater une chaine de caractères en fonction d’un schéma de recherche et renvoyer un tableau.</br>
+    A chaque fois que le schéma de recherche est trouvé dans la chaine de départ, preg_split() crée un nouvel élément dans le tableau renvoyé.</p>
+    <?php
+        $chaine = 'ephemere';
+        $masque = '/e/';
+        echo 'Exemple de preg_split() avec masque /e/ sur la chaîne "éphémère": </br>';
+        var_dump(preg_split($masque, $chaine));
+    ?>
+    265
 </body>
 </html>
