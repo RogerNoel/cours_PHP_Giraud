@@ -338,5 +338,6 @@
         echo '</br>';
         echo 'Pour la présentation des textes on utilise la fonction <em>implode()</em> qui renvoie les items d\'un tableau sous forme de string en spécifiant un séparateur personnalisé.';
     ?>
+    272
 </body>
 </html>
