@@ -8,6 +8,8 @@
         .med_underline { text-decoration: underline; font-size: 1.1em;}
         table { border-collapse: collapse; }
         td { padding: 5px; border: 1px solid black; }
+        thead { text-align: center; }
+        .first { text-align: center; font-size: 1.5em; }
     </style>
 </head>
 <body>
@@ -210,6 +212,131 @@
         echo 'Exemple de preg_split() avec masque /e/ sur la chaîne "éphémère": </br>';
         var_dump(preg_split($masque, $chaine));
     ?>
-    265
+    <h2>Fonction preg_quote()</h2>
+    <p>La fonction <strong>preg_quote()</strong> va nous permettre d’échapper certains caractères spéciaux pour les regex. Utiliser preg_quote() correspond à placer un antislash (le caractère d’échappement ou de protection) devant chaque caractère spécial.Cette fonction peut s’avérer utile lorsque notre schéma de recherche possède beaucoup de caractères spéciaux dont on veut échapper le sens.</br>
+    Nous reparlerons des caractères spéciaux et de l’échappement des caractères plus tard dans cette partie.</p>
+    <h2>La fonction preg_last_error()</h2>
+    <p>La fonction <strong>preg_last_error()</strong> va être surtout utilisée pour du <u>débogage</u>. En effet, celle-ci va retourner le code d’erreur correspondant à la dernière regex utilisée. <u>On pourra donc utiliser cette fonction lorsqu’une de nos regex ne fonctionne pas, afin d’avoir plus d’informations sur la nature du problème</u>.
+    </p>
+    <h1>Les classes de caractères des regex</h1>
+    <p>Nous allons découvrir les classes de caractères et commencer à créer des masques relativement complexes et intéressants pour les expressions régulières.</p>
+    <p>Les classes de caractères permettent de fournir <em>différents choix de correspondance</em> pour un caractère en spécifiant un ensemble de caractères qui vont pouvoir être trouvés. En d’autres termes, elles permettent de rechercher n’importe quel caractère d’une chaine qui fait partie de la classe de caractères fournie dans le masque.</br>
+    Pour déclarer une classe de caractères dans notre masque, nous allons utiliser une paire de crochets [ ] qui vont délimiter la classe en question.</br>
+    Prenons immédiatement un exemple concret en utilisant des classes de caractères simples:</p>
+    <?php
+        echo 'La chaine de caractères est: "Bonjour, je suis Roger Noel.".</br>';
+        $chaine = 'Bonjour, je suis Roger Noel.';
+
+        echo 'Résultat de preg_match_all() avec le premier masque: <em>/[aeiouy]/</em></br>';
+        $masque1 = '/[aeiouy]/';
+        preg_match_all($masque1, $chaine, $tab1);
+        print_r($tab1);
+        echo '<u>Cette classe de caractères permet de rechercher tous les caractères qui y sont compris.</u></br></br>';
+
+        echo 'Résultat de preg_match_all() avec le second masque: <em>/j[aeiouy]/</em></br>';
+        $masque2 = '/j[aeiouy]/';
+        preg_match_all($masque2, $chaine, $tab2);
+        print_r($tab2);
+        echo '</br><u>Ce masque permet de rechercher tous les caractères "j" qui sont immédiatement suivis d\'un des caractères compris dans la classe.</u></br></br>';
+
+        echo 'Résultat de preg_match_all() avec le troisième masque: <em>/[aeiouy][aeiouy]/</em></br>';
+        $masque3 = '/[aeiouy][aeiouy]/';
+        preg_match_all($masque3, $chaine, $tab3);
+        print_r($tab3);
+        echo '</br><u>Ce masque permet de rechercher tous les caractères compris dans la première classe qui sont immédiatement suivis d\'un des caractères compris dans la seconde classe.</u></br></br>';
+
+        echo 'Résultat de preg_match_all() avec le quatrième masque: <em>/n[aeiouy][aeiouy]/i</em></br>';
+        $masque4 = '/n[aeiouy][aeiouy]/i';
+        preg_match_all($masque4, $chaine, $tab4);
+        print_r($tab4);
+        echo '</br><u>Ce masque permet de rechercher tous les caractères compris dans la première classe qui sont immédiatement suivis d\'un des caractères compris dans la seconde classe.</u></br>Pour rappel, le "i" après le délimiteur rend la recherche insensible à la casse.';
+    ?>
+    <h2>Les classes de caractères et les métacaractères</h2>
+    <p>Dans le langage des expressions régulières, de nombreux caractères vont avoir une signification spéciale; ils permettent de spécifier qu’on recherche tel caractère (ou telle séquence de caractères) un certain nombre de fois ou à une certaine place dans une chaine.</br>
+    Ces caractères spéciaux qu’on appelle <strong>métacaractères</strong> permettent de créer des schémas ou masques de recherche très puissants. On a pu en voir un premier exemple avec les caractères crochets [ ] qui permettent de définir une classe de caractères.</br>
+    Au sein des classes de caractères, nous n’avons accès qu’à 3 métacaractères, c’est-à-dire qu’il n’existe que trois caractères qui possèdent un sens spécial lorsqu’ils sont placés tels quels dans une classe de caractères.</br>
+    Ces métacaractères sont les suivants:</p>
+    <table>
+        <thead>
+            <td>Métacaractère</td>
+            <td>Description</td>
+        </thead>
+        <tr>
+            <td class="first">\</td>
+            <td>Caractère de <em>protection</em> qui va avoir plusieurs usages (on va pouvoir s’en servir pour <u>donner un sens spécial à des caractères qui n’en possèdent pas</u> ou au contraire pour neutraliser le sens spécial des métacaractères).</td>
+        </tr>
+        <tr>
+            <td class = first>^</td>
+            <td>Si placé au tout début d’une classe, permet de </em>nier (inverser)</em> la classe c’est-à-dire de chercher tout caractère <u>qui n’appartient pas à la classe</u>.</td>
+        </tr>
+        <tr>
+            <td class = first>-</td>
+            <td>Entre deux caractères, permet d’indiquer un <em>intervalle</em> de caractères.</td>
+        </tr>
+    </table>
+    <p>Si on veut rechercher le caractère <em>qui représente</em> un métacaractère et sans en utiliser son sens "métacaractère" (par exemple si on souhaite rechercher le signe "-"), il faudra alors <u>le protéger avec un antislash</u>.</br>
+    <em>Attention:</em> pour rechercher le caractère antislash avec une regex (c’est-à-dire à partir d’un masque stocké sous forme de chaine de caractères), il faudra préciser 4 antislashs d’affilée. En effet, l’analyseur PHP va considérer les 1er et 3è antislash comme des caractères d’échappement et ne conserver donc que les 2è et 4è antislash. Puis la regex va considérer le 1er des deux antislashs restants comme un caractère d'échappement et va donc rechercher le caractère antislash placé derrière.</br>
+    <em>Notez</em> qu’il faudra également protéger les signes crochets fermants ainsi que le délimiteur de masque choisi si on souhaite les inclure dans une recherche dans une classe de caractères car dans le cas contraire le PHP penserait qu’on termine une classe de caractères ou notre masque.</p>
+    <?php
+        echo '<h4>Tests des métacaractères:</h4>';
+        echo 'La chaine de caractères est: "Bonjour, qui suis-je ? Je suis [Pierre] \0/ ^^".</br></br>';
+        $chaine = 'Bonjour, qui suis-je ? Je suis [Pierre] \0/ ^^';
+        // liste des masques
+        $masque1 = '/[^aeiouy]/';
+        $masque2 = '/[\^aeiouy]/'; // échappement du ^
+        $masque3 = '/[aei^ouy]/'; // pas besoin d'échapper le ^ ici car il ne représente pas un métacaractère (si c'en était un il serait en début de classe)
+        $masque4 = '/[a-z]o/';
+        $masque5 = '/[a-zA-Z]o/';
+        $masque6 = '/[a\-z]/'; // le - est échappé, on recherche donc les 3 caractères a, - et z
+        $masque7 = '/[0-9az-]/';
+        $masque8 = '/[\/[\]\\\\]/'; // on recherche /, [, ] et \
+
+        echo 'Le masque 1 <em>/[^aeiouy]/</em> commence par un "^" et inverse donc la recherche:</br>';
+        preg_match_all($masque1, $chaine, $tab1);
+        echo 'Caractères trouvés: ' . implode(', ', $tab1[0]) . '.</br>';
+        echo '</br>';
+        
+        echo 'Le masque 2 <em>/[\^aeiouy]/</em> commence par un "^" échappé et recherche donc le caractère "^" ainsi que les suivants:</br>';
+        preg_match_all($masque2, $chaine, $tab2);
+        echo 'Caractères trouvés: ' . implode(', ', $tab2[0]) . '.</br>';
+        echo '</br>';
+
+        echo 'Le masque 3 <em>/[aei^ouy]/</em> fait la même recherche car le caractère "^" ne peut être un métacaractère car il ne débute pas la séquence de la classe:</br>';
+        preg_match_all($masque3, $chaine, $tab3);
+        echo 'Caractères trouvés: ' . implode(', ', $tab3[0]) . '.</br>';
+        echo '</br>';
+
+        echo 'Le masque 4 <em>/[a-z]o/</em> recherche n\'importe quel caractère MINUSCULE qui précède un "o":</br>';
+        preg_match_all($masque4, $chaine, $tab4);
+        echo 'Caractères trouvés: ' . implode(', ', $tab4[0]) . '.</br>';
+        echo '</br>';
+
+        echo 'Le masque 5 <em>/[a-zA-Z]o/</em> recherche n\'importe quel caractère majuscule ou minuscule qui précède un "o":</br>';
+        preg_match_all($masque5, $chaine, $tab5);
+        echo 'Caractères trouvés: ' . implode(', ', $tab5[0]) . '.</br>';
+        echo '</br>';
+
+        echo 'Le masque 6 <em>/[a\-z]/</em> va rechercher les caractères "a", "-" et "z". En effet "-" est échappé et perd donc son métacaractère :</br>';
+        preg_match_all($masque6, $chaine, $tab6);
+        echo 'Caractères trouvés: ' . implode(', ', $tab6[0]) . '.</br>';
+        echo '</br>';
+
+        echo 'Le masque 7 <em>/[0-9az-]/</em> va rechercher les chiffres de 0 à 9, les lettres "a" et "z" ainsi que le caractère "-". En effet le tiret est en fin de classe et ne représente donc pas une "plage" entre deux extrêmes:</br>';
+        preg_match_all($masque7, $chaine, $tab7);
+        echo 'Caractères trouvés: ' . implode(', ', $tab7[0]) . '.</br>';
+        echo '</br>';
+
+        echo 'Explication du masque 8:
+            <ul>
+                <li>le 1° antislash échappe le /, sinon PHP croit qu\'il représente la fin du masque</li>
+                <li>le 2° antislash échappe le ], sinon PHP croit qu\'il représente la fin de la classe</li>
+                <li>Les 4 antislash qui se suivent ont été expliqués plus haut: ils servent à rechercher un antislash dans la chaîne</li>
+            </ul>
+            Conclusion le masque 8 recherche les caractères /, [, ] et \.</br>';
+        preg_match_all($masque8, $chaine, $tab8);
+        echo 'Caractères trouvés: ' . implode(', ', $tab8[0]) . '.</br>';
+        echo '</br>';
+        echo 'Pour la présentation des textes on utilise la fonction <em>implode()</em> qui renvoie les items d\'un tableau sous forme de string en spécifiant un séparateur personnalisé.';
+    ?>
 </body>
 </html>
