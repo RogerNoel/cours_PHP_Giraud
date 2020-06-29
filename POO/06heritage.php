@@ -57,7 +57,7 @@
         $contremaitreJean->presentation();
         $contremaitreJean->conduire();
         $contremaitreJean->setAge(42);
-        print_r($contremaitreJean);
+        var_dump($contremaitreJean);
     ?>
     <p style="font-size: 1.2em;">Les gros avantages de l'héritage sont 
         <ul>
