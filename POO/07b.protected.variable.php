@@ -42,22 +42,34 @@
                 $this->jouet = $jouet;
             }
             public function presentation(){
-                echo "AREUUUUH je suis $this->prenom et j'ai $this->age ans.</br>";
+                if($this->age<=5){
+                    echo "AREUUUUH je suis $this->prenom et j'ai $this->age ans.</br>";
+                } else {
+                    echo "Hello ! Je suis $this->prenom et j'ai $this->age ans.</br>";
+                }
+                
             }
             public function jouer(){
                 echo "Je joue avec mon jouet $this->jouet.</br>";
+            }
+            public function changeJouet($jouet){
+                $this->jouet = $jouet;
             }
         }
 
         $manon = new Mome(9, "Manon", "Lego");
         $manon->presentation();
         $manon->setAge(10);
-        print_r($manon);
+        var_dump($manon);
         echo '</br>'.$manon->getAge().' ans</br>';
         $manon->presentation();
         $manon->setAge(20);
         $manon->presentation();
         $manon->jouer();
+        $manon->changeJouet("Playstation");
+        var_dump($manon);
+        $manon->setAge(4);
+        $manon->presentation();
     ?>
 </body>
 </html>
