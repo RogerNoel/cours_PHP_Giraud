@@ -141,7 +141,7 @@ tableau)</li>
     <h3>Renommer un fichier</h3>
     <p>La fonction <strong>rename()</strong> permet de renommer un fichier ou un dossier. On lui passe le nom d’origine du fichier ou du dossier et le nouveau nom en arguments. si le nom choisi est le nom d’un fichier existant, ce fichier sera écrasé et remplacé par le fichier renommé.</p>
     <h3>Effacer un fichier</h3>
-    <p>La fonction <strong>unlink()</strong> permet d’effacer un fichier. On lui passele chemin du fichier à effacer en argument. Cette fonction va retourner true si le fichier a bien été effacé ou false en cas d’erreur.</p>
+    <p>La fonction <strong>unlink()</strong> permet d’effacer un fichier. On lui passe le chemin du fichier à effacer en argument. Cette fonction va retourner true si le fichier a bien été effacé ou false en cas d’erreur.</p>
     <h2>Introduction aux permissions des fichiers et au chmod</h2>
     <p>Sujet vaste et complexe que nous n’allons aborder qu'en surface et dans les grandes lignes afin de comprendre la relation avec les fichiers en PHP. Le système Linux (utilisés par la plupart des hébergeurs) <u>définit différents types d’utilisateurs</u> pouvant interagir avec les fichiers (et les dossiers):
         <ul>

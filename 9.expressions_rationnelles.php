@@ -140,26 +140,26 @@
     ?>
     <h3>Etude de l'exemple de la page 259</h3>
     <?php
-        echo 'Initialisation du masque et de la chaîne.</br>';
+        echo '1. Initialisation du masque et de la chaîne.</br>';
         $masque = '/r/';
         $chaine = 'Je suis Pierre Giraud';
-        echo 'On fait un <em>preg_match($masque, $chaine, $match)</em>.</br>';
+        echo '2. On fait un <em>preg_match($masque, $chaine, $match)</em>.</br>';
         echo '<strong><em>Conclusion:</em> 
             <ol>
                 <li>On n\'est pas obligé d\'initialiser le tableau qui servira d\'argument.</li>
                 <li>Quand on initie ce tableau directement en argument, on n\a pas besoin de mettre des crochets [].</li>
             </ol> </strong>';
         preg_match($masque, $chaine, $match);
-        echo 'Un tableau $match[] a été créé avec le résultat de la fonction, faisons un print_r() de ce tableau:</br>';
+        echo '3. Un tableau $match[] a été créé avec le résultat de la fonction, faisons un print_r() de ce tableau:</br>';
         print_r($match);
-        echo '</br>Maintenant on fait un preg_match_all($masque, $chaine, $match_all) en créant donc un autre tableau.</br>';
+        echo '</br>4. Maintenant on fait un preg_match_all($masque, $chaine, $match_all) en créant donc un autre tableau.</br>';
         preg_match_all($masque, $chaine, $match_all);
-        echo 'On fait un print_r() de ce nouveau tableau $match_all;</br>';
+        echo '5. On fait un print_r() de ce nouveau tableau $match_all;</br>';
         print_r($match_all);
-        echo '</br><strong><em>Rappel:</em></strong> preg_match_all() sans l\'argument tableau renvoie le nombre d\'occurences trouvées: </br>';
-        echo 'Le nombre d\'occurences de ' . $match_all[0][0] . ' trouvées est: ' . preg_match_all($masque, $chaine) . '.</br>';
-        echo 'On récupère "l\'exemplaire" du masque soit avec $match[0], soit avec $match_all[0][0], en l\'occurence ici : ' . $match[0] . '.</br>';
-        echo 'Donc, nous avons vu que preg_match_all($masque, $chaine) renvoie le nombre d\'occcurences dans tout le document.</br>
+        echo '</br><strong><em>6. Rappel:</em></strong> preg_match_all() sans l\'argument tableau renvoie le nombre d\'occurences trouvées: </br>';
+        echo '7. Le nombre d\'occurences de ' . $match_all[0][0] . ' trouvées est: ' . preg_match_all($masque, $chaine) . '.</br>';
+        echo '8. On récupère "l\'exemplaire" du masque soit avec $match[0], soit avec $match_all[0][0], en l\'occurence ici : ' . $match[0] . '.</br>';
+        echo '9. Donc, nous avons vu que preg_match_all($masque, $chaine) renvoie le nombre d\'occcurences dans tout le document.</br>
         Et nous savons que pour déterminer une position de départ pour la recherche, il faut écrire cette position en 5° argument.</br>
         Mais pour écrire ce 5° argument, il faut bien écrire le 3° et le 4°, même s\'ils ne servent à rien, à savoir:
             <ul>
@@ -185,7 +185,7 @@
     ?>
     <p>La fonction <strong>preg_replace()</strong> fonctionne exactement comme preg_filter(). La différence entre ces deux fonctions va être dans la valeur retournée si le schéma de recherche n’est pas trouvé dans la chaine de caractères. En effet, dans ce cas-là, la fonction preg_filter() va renvoyer la valeur null (correspondant à l’absence de valeur) tandis que preg_replace() va renvoyer la chaine de caractères de départ.</p>
     <?php
-        $masque = '/z/';
+        $masque = '/u/';
         $chaine = 'Roger';
         echo 'Test négatif avec preg_filter().</br>';
         echo 'La valeur renvoyée est:</br>';
@@ -201,7 +201,8 @@
     <?php
         $prenoms = ['nath', 'tom', 'manon', 'nathalie'];
         $masque = '/nath/';
-        var_dump(preg_grep($masque, $prenoms));
+        $newtab = preg_grep($masque, $prenoms);
+        var_dump($newtab);
     ?>
     <h2>La fonction grep_split()</h2>
     <p>La fonction <strong>preg_split()</strong> va éclater une chaine de caractères en fonction d’un schéma de recherche et renvoyer un tableau.</br>
@@ -338,6 +339,207 @@
         echo '</br>';
         echo 'Pour la présentation des textes on utilise la fonction <em>implode()</em> qui renvoie les items d\'un tableau sous forme de string en spécifiant un séparateur personnalisé.';
     ?>
-    272
+    <h2>Les classes de caractères abrégées ou prédéfinies</h2>
+    <p>Le caractère d’échappement antislash va pouvoir avoir plusieurs rôles ou plusieurs sens dans un contexte d’utilisation au sein d’expressions régulières. On a déjà vu que l’antislash nous permettait de protéger certains métacaractères, c’est-à-dire que le métacaractères ne prendra pas sa signification spéciale mais pourra être cherché en tant que caractère simple.</br>
+    <em>L’antislash va encore pouvoir être utilisé au sein de classes de caractères avec certains caractères « normaux » pour au contraire leur donner une signification spéciale.</em></br>
+    On va ainsi pouvoir utiliser des <strong><em>classes abrégées ou prédéfinies</em></strong>  pour indiquer qu’<u>on recherche un type de valeurs plutôt qu’une valeur ou qu’une plage de valeurs en particuliers</u>.</br>
+    Les classes abrégées disponibles sont les suivantes (faites bien attention aux emplois de majuscules et de minuscules ici !):</p>
+    <table>
+        <thead>
+            <td>Classe abrégée</td>
+            <td>Description</td>
+        </thead>
+        <tr>
+            <td>\w</td>
+            <td>Équivalent à [a-zA-Z0-9 ], donc toutes lettres min ou maj et les chiffres.</td>
+        </tr>
+        <tr>
+            <td>\W</td>
+            <td>Inverse du précédent, soit [^a-zA-Z0-9_].</td>
+        </tr>
+        <tr>
+            <td>\d</td>
+            <td>Un chiffre, soit [0-9].</td>
+        </tr>
+        <tr>
+            <td>\D</td>
+            <td>Tout caractère qui n'est pas un chiffre, soit [^0-9].</td>
+        </tr>
+        <tr>
+            <td>\s</td>
+            <td>Représente un caractère blanc (espace, retour chariot, retour à la ligne).</td>
+        </tr>
+        <tr>
+            <td>\S</td>
+            <td>Représente tout caractère qui n'est pas un caractère blanc.</td>
+        </tr>
+        <tr>
+            <td>\h</td>
+            <td>Représente un espace horizontal.</td>
+        </tr>
+        <tr>
+            <td>\H</td>
+            <td>Représente tout caractère qui n'est pas un espace horizontal.</td>
+        </tr>
+        <tr>
+            <td>\v</td>
+            <td>Représente un caractère vertical.</td>
+        </tr>
+        <tr>
+            <td>\V</td>
+            <td>Représente tout caractère qui n'est pas un espace vertical.</td>
+        </tr>
+    </table>
+    <h3>Tests sur les classes de caractère abrégées</h3>
+    <?php
+        echo "On créé une chaîne= \"Je suis Pierre, j'ai 29 ans. Et vous ?\"";
+        $chaine = "Je suis Pierre, j'ai 29 ans. Et vous ?";
+        echo "Ensuite, on commence par créer des masques.</br>";
+
+        echo "<strong>Premier masque</strong> = /[\W]/</br>";
+        $masque1 = '/[\W]/'; // [^a-zA-Z0-9 ]
+        echo "preg_match_all() du masque 1 sur la chaîne:</br>";
+        preg_match_all($masque1, $chaine, $tab1);
+        var_dump($tab1);
+
+        echo "<strong>Second masque</strong> = /[\d]/</br>";
+        $masque2 = '/[\d]/'; // [0-9]
+        echo "preg_match_all() du masque 2 sur la chaîne:</br>";
+        preg_match_all($masque2, $chaine, $tab2);
+        var_dump($tab2);
+
+        echo "<strong>Troisième masque</strong> = /[\h]/</br>";
+        $masque3 = '/[\h]/'; // espace horizontal
+        echo "preg_match_all() du masque 3 sur la chaîne:</br>";
+        preg_match_all($masque3, $chaine, $tab3);
+        var_dump($tab3);
+        echo "La chaîne contient " . preg_match_all($masque3, $chaine) . " espaces.</br>";
+    ?>
+    <h2>Les métacaractères des regex PHP</h2>
+    <p>Nous avons appris à créer des classes de caractères et avons découvert qu’on pouvait insérer dans nos classes de caractères des caractères qui possèdent une signification spéciale : les métacaractères.</br>
+    Nous n’avons accès qu’à <u>trois métacaractères</u> au sein des classes de caractères : les métacaractères <span style="font-weight: bold; font-size: 1.2em; color: red;">^</span>, <span style="font-weight: bold; font-size: 1.2em; color: red;">-</span> et <span style="font-weight: bold; font-size: 1.2em; color: red;">\</span>.</br>
+    A l’extérieur des classes de caractères, cependant, nous allons pouvoir en utiliser de nombreux autres.</p>
+    <h3>Le point</h3>
+    <p>Le métacaractère . (point) va nous permettre de rechercher n’importe quel caractère à l’exception du caractère représentant une nouvelle ligne qui est en PHP le \n.</p>
+    <?php
+        echo "On créé une chaîne= \"Pierre, 29 ans. Et vous ?\"";
+        $chaine = "Pierre, 29 ans. Et vous ?";
+        echo "Masque 1 = /./</br>";
+        $masque1 = '/./'; 
+        echo "preg_match_all() du masque 1 sur la chaîne: </br>";
+        preg_match_all($masque1, $chaine, $tab1);
+        var_dump($tab1);
+        echo "Le point spécifié <strong>en dehors</strong> d'une classe est un métacaractère qui permet de rechercher n'importe quel caractère sauf une nouvelle ligne.</br>";
+        echo "-----------</br>";
+        echo "Masque 2 = /[.]/</br>";
+        $masque2 = '/[.]/'; 
+        preg_match_all($masque2, $chaine, $tab2);
+        var_dump($tab2);
+        echo "Le point spécifié <strong>dans</strong> une classe sert simplement à rechercher les points (.) dans la chaîne.</br>";
+    ?>
+    <p> <strong>Il est important de bien intégrer qu'il n’existe que trois métacaractères, c’est-à-dire trois caractères qui vont posséder un sens spécial à l’intérieur des classes de caractères (^ - \). </br>
+    <u>Les métacaractères que nous étudions dans cette partie ne vont avoir un sens spécial qu’<span style="color:red;">en dehors</span> des classes de caractères.</u></strong> </p>
+    <p>Le métacaractère | (barre verticale) sert à séparer des <em>alternatives</em>.</br>
+    Concrètement, ce métacaractère va nous permettre de créer des masques qui vont pouvoir chercher une séquence de caractères ou une autre.</p>
+    <?php
+        echo "Masque /er|re/ sur la chaine \"Pierre, 29 ans. Et vous ?\"</br>";
+        $masquePipe = '/er|re/';
+        preg_match_all($masquePipe, $chaine, $tab);
+        var_dump($tab);
+    ?>
+    <p>On utilise le métacaractère | pour créer une <strong>alternative</strong> dans notre masque.</br>
+    Ce masque va nous permettre de chercher soit la séquence de caractères « er » soit la séquence « re » dans la chaine de caractères à analyser.</p>
+    <h3>Les ancres</h3>
+    <p>Les deux métacaractères ^ et $ vont nous permettre <em>« d’ancrer »</em> des masques.
+        <ul>
+            <li>Le métacaractère ^, <u>lorsqu’il est utilisé en dehors d’une classe</u>, va posséder une signification différente de lors de l’utilisation dans une classe.</br>
+            Attention donc à ne pas confondre les deux sens !</br>
+            <strong>Utiliser le métacaractère ^ en dehors d’une classe</strong> permet de vérifier si le caractère qui suit directement le ^ du masque <em>est le premier de la chaine de caractères à analyser</em>. Il faudra placer le ^ au début du masque ou tout au moins en début d’alternative pour qu’il exprime ce sens.</br>
+            Pour rappel, le ^ dans une classe inverse la recherche.</li>
+            <li>Inversement, le métacaractère $ permet de vérifier la présence du caractère <strong>précédant</strong> le métacaractère en fin de chaine.</br>
+            Il faudra placer le métacaractère $ en fin de du masque ou tout au moins en fin d’alternative pour qu’il exprime ce sens.</li>
+        </ul>
+    </p>
+    <h4>Quelques exemples:</h4>
+    <p>Le masque <em>/^p/</em> recherche la lettre p minuscule en début de chaîne.</br>
+    Le masque <em>/^p|^P/</em> recherche un p (maj ou min) en début de chaîne.</br>
+    Le masque <em>/^[A-Z]/</em> recherche une lettre majuscule en début de chaîne.</br>
+    Le masque <em>/\?/</em> recherche un ? en fin de chaîne.</br>
+    Le masque <em>/^p\?$|^P\?$/</em> recherche une chaîne qui commencerait par un p minuscule et se terminerait par un ? OU qui commencerait par un P majuscule et se terminerait par un ?</p>
+    <p><u>Remarque:</u> nous avons protégé le caractère ? à chaque utilisation dans ces masques car c’est également un métacaractère (que étudierons après) et car nous voulions chercher la présence du caractère « ? ».</p>
+    <h3>Les quantificateurs</h3>
+    <p>Les quantificateurs sont des métacaractères qui permettent de rechercher une certaine quantité d’un caractère ou d’une séquence de caractères.</br>
+    Les quantificateurs disponibles sont les suivants :
+        <table>
+            <thead>
+                <td>Quantificateur</td>
+                <td>Description</td>
+            </thead>
+            <tr>
+                <td>a{X}</td>
+                <td>On veut une séquence de X fois "a".</td>
+            </tr>
+            <tr>
+                <td>a{X,Y}</td>
+                <td>On veut une séquence de X à Y fois "a". </td>
+            </tr>
+            <tr>
+                <td>a{X,}</td>
+                <td>On veut une séquence d'au moins X fois "a" sans limite supérieure.</td>
+            </tr>
+            <tr>
+                <td>a?</td>
+                <td>On veut 0 ou 1 "a". Équivalent à a{0,1}.</td>
+            </tr>
+            <tr>
+                <td>a+</td>
+                <td>On veut au moins 1 fois "a". Équivalent à a{1,}.</td>
+            </tr>
+            <tr>
+                <td>a*</td>
+                <td>On veut 0, 1 ou plusieurs "a". Équivalent à a{0,}</td>
+            </tr>
+        </table>
+    </p>
+    <?php
+        echo "La chaîne 1 est: \"Pierre, 29 ans. Et vous ?\"</br>";
+        $chaine1 = "Pierre, 29 ans. Et vous ?";
+        echo "La chaine 2 est \"0665656565\"";
+        $chaine2 = "0665656565";
+        echo "1. preg_match_all() du masque <em>/er?/</em> sur la chaîne 1: </br>";
+        $masque1 = "/er?/";
+        preg_match_all($masque1, $chaine1, $tab1);
+        var_dump($tab1);
+        echo "Le masque recherche \"e\" suivi de (r?), soit 0 ou 1 fois \"r\": donc on recherche e ou er.</br>";
+
+        echo "2. preg_match_all() du masque <em>/er+/</em> sur la chaîne 1: </br>";
+        $masque2 = "/er+/";
+        preg_match_all($masque2, $chaine1, $tab2);
+        var_dump($tab2);
+        echo "Le masque recherche \"e\" suivi de (r+), soit au moins 1 \"r\": donc e suivi d'un nombre indéféni de r.</br>";
+
+        echo "3. preg_match_all() du masque <em>/^[A-Z].{10,}\?$/</em> sur la chaîne 1: </br>";
+        $masque3 = '/^[A-Z].{10,}\?$/';
+        preg_match_all($masque3, $chaine1, $tab3);
+        var_dump($tab3);
+        echo "Dans ce cas nous avons 3 critères dans la recherche:
+            <ul>
+                <li><em>^[A-Z]</em> qui recherche une majuscule comme 1° caractère.</li>
+                <li><em>.{10,}</em> qui recherche une séquence d'au moins 10 caractères (nouvelle ligne \\n exclus).</li>
+                <li><em>\?$</em> qui recherche un point d'interrogation en dernier caractère.</li>
+            </ul>";
+
+        $masque4 = '/^\d{10,10}$/';
+        preg_match_all($masque4, $chaine2, $tab4);
+        var_dump($tab4);
+        echo "Doit contenir exactement et uniquement 10 chiffres.</br>
+        Il n'y a pas d'explication dans le cours mais voici comment j'interprète ce masque:
+            <ul>
+                <li><em>^\d</em>: commence par un chiffre.</li>
+                <li><em>\d{10,10}$</em>: ($) se termine par {10,10} 10 et uniquement 10 (\d) chiffres.</li>
+            </ul>";
+    ?>
+    <h3>Les sous-masques</h3>
+    283
 </body>
 </html>

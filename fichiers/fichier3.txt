@@ -1,2 +1,2 @@
 123iture d10n t15te Je rajoute du texte en position 20avec fwrite().Ajout de texte.
-Je passe à la ligne suivante.Ecrire avec fseek().igne suivante.
+Je passe à la ligne suivante.Ecrire avec fseek().igne suivante.Ecrire avec fseek().igne suivante.

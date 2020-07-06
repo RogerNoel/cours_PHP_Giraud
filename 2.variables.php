@@ -24,6 +24,7 @@
     <p>Il correspond à l'absence de valeur et sert à représenter des variables vides.</p>
     <?php
     $prenom;
+    // var_dump($prenom);
     echo gettype($prenom);
     ?>
     <h3>Le type Resource</h3>
@@ -35,7 +36,7 @@
         $machaine = "Le contenu de ma chaîne";
         echo "Avec des guillemets, la variable est interprétée: $machaine </br>";
         echo 'Avec des apostrophes, la variable $machaine fait juste partie de la chaîne affichée par echo'. "</br>";
-        $prenom = "roger";
+        $prenom = "Roger";
         echo "je m'appelle {$prenom} et j'habite à Spa";
     ?>
     <p>Quand on utilise les guillemets, on préfèrera utiliser la méthode qui consiste  à utiliser des accolades pour entourer les variables, pour les mettre en évidence.</p>
