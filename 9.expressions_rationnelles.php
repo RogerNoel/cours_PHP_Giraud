@@ -10,6 +10,7 @@
         td { padding: 5px; border: 1px solid black; }
         thead { text-align: center; }
         .first { text-align: center; font-size: 1.5em; }
+        tr td:first-child {text-align: center;}
     </style>
 </head>
 <body>
@@ -584,6 +585,183 @@
         echo "</br>";
     ?>
     <h3>Les assertions</h3>
+    <p>Une <em>assertion</em> est un <strong>test</strong> qui va se dérouler <strong>sur le ou les caractères suivants ou précédent celui qui est à l’étude actuellement</strong>.</br>
+    Par exemple, le métacaractère $ est une assertion puisque l’idée est de vérifier qu’il n’y a plus aucun caractère après le caractère ou la séquence écrite avant $.</br>
+    Ce premier exemple correspond à une assertion dite simple. Il est également possible d’utiliser des assertions complexes qui vont prendre la forme de sous masques.</br>
+    Il existe deux grands types d’assertions complexes:
+        <ul>
+            <li>celles qui vont porter sur les caractères suivants celui à l’étude qu’on appellera également « assertion avant »,</li>
+            <li>celles qui vont porter sur les caractères précédents celui à l’étude qu’on appellera également « assertion arrière ».</li>
+        </ul>
+    Les assertions avant et arrière vont encore pouvoir être « positives » ou « négatives »:
+        <ul>
+            <li>une assertion « <strong>positive</strong> » est une assertion qui va <strong>chercher la présence</strong> d’un caractère après ou avant le caractère à l’étude,</li>
+            <li>une assertion « <strong>négative</strong> » va au contraire <strong>vérifier l'absence</strong> -<em>qu’un caractère n’est pas présent</em>- après ou avant le caractère à l’étude.</li>
+        </ul>
+    Notez que les assertions, à la différence des sous masques, ne sont pas capturantes par défaut et ne peuvent pas être répétées.</br>
+    Voici les assertions complexes qu’on va pouvoir utiliser ainsi que leur description rapide:</p>
+    <table>
+        <thead>
+            <td>Assertion</td>
+            <td>Description</td>
+        </thead>
+        <tr>
+            <td>a(?=b)</td>
+            <td>Cherche "a" suivi de "b" (assertion avant positive).</td>
+        </tr>
+        <tr>
+            <td>a(?!b)</td>
+            <td>Cherche "a" non suivi de "b" (assertion avant négative).</td>
+        </tr>
+        <tr>
+            <td>(?<=b)a</td>
+            <td>Cherche "a" précédé de "b" (assertion arrière positive).</td>
+        </tr>
+        <tr>
+            <td>(?&lt;!b)a</td>
+            <td>Cherche "a" non précédé de "b" (assertion arrière négative).</td>
+        </tr>
+    </table>
+    <h2>Résumé: liste complète des méracaractères des regex</h2>
+    <table>
+        <thead>
+            <td>Métacaratère</td>
+            <td>Description</td>
+        </thead>
+        <tr>
+            <td>\</td>
+            <td>Caractère dit d’échappement ou de protection qui va servir notamment à neutraliser le sens d’un métacaractère ou à créer une classe abrégée.</td>
+        </tr>
+        <tr>
+            <td>[</td>
+            <td>Début de classe.</td>
+        </tr>
+        <tr>
+            <td>]</td>
+            <td>Fin de classe.</td>
+        </tr>
+        <tr>
+            <td>.</td>
+            <td>Permet de chercher n’importe quel caractère à l’exception du caractère de nouvelle ligne.</td>
+        </tr>
+        <tr>
+            <td>|</td>
+            <td>Caractère d'alternative.</td>
+        </tr>
+        <tr>
+            <td>^</td>
+            <td>Permet de chercher la présence d’un caractère en début de chaine.</td>
+        </tr>
+        <tr>
+            <td>$</td>
+            <td>Permet de chercher la présence d’un caractère en fin de chaine.</td>
+        </tr>
+        <tr>
+            <td>?</td>
+            <td>Quantificateur de 0 ou 1. Peut également être utilisé avec « ( » pour en modifier le sens</td>
+        </tr>
+        <tr>
+            <td>+</td>
+            <td>Quantificateur de 1 ou plus.</td>
+        </tr>
+        <tr>
+            <td>*</td>
+            <td>Quantificateur de 0 ou plus.</td>
+        </tr>
+        <tr>
+            <td>{</td>
+            <td>Début de quantificateur.</td>
+        </tr>
+        <tr>
+            <td>}</td>
+            <td>Fin de quantificateur</td>
+        </tr>
+        <tr>
+            <td>(</td>
+            <td>Début de sous-masque ou d'assertion.</td>
+        </tr>
+        <tr>
+            <td>)</td>
+            <td>Fin de sous-masque ou d'assertion.</td>
+        </tr>
+    </table>
+
+    <h2>Options des expressions régulières disponibles en PHP</h2>
+    <p>En plus des métacaractères, nous pouvons ajouter des caractères appelés <em>options</em> aux masques pour construire des expressions régulières. Nous allons découvrir les différents caractères d’option disponibles et apprendre à les utiliser intelligemment.</p>
     
+    <h3>Présentation des options regex</h3>
+    <p>Les options ou <em>modificateurs</em> sont des caractères qui permettent d’ajouter des options aux expressions régulières. Les options ne vont pas à proprement parler nous permet de chercher tel ou tel caractère mais vont agir à un niveau plus élevé en modifiant le comportement par défaut des expressions régulières. Elles vont par exemple permettre de rendre une recherche insensible à la casse.</br>
+    On peut facilement différencier une option d’un caractère normal ou d’un métacaractère car les options sont les seuls caractères qui peuvent et doivent obligatoirement être placés en dehors des délimiteurs du masque, après le délimiteur final.</p>
+
+    <h3>Liste des options disponibles et exemples</h3>
+    <table>
+        <thead>
+            <td>Option</td>
+            <td>Description</td>
+        </thead>
+        <tr>
+            <td>i</td>
+            <td>Rend la recherche insensible à la casse.</td>
+        </tr>
+        <tr>
+            <td>m</td>
+            <td>Par défaut, les regex considèrent la chaine dans laquelle on fait une recherche comme étant sur une seule ligne et font qu’on ne peut donc utiliser les métacaractères ^ et $ qu’une seule fois. L’option <em>m</em> permet de tenir compte des caractères de retour à la ligne et de retour chariot et fait que ^ et $ vont pouvoir être utilisés pour chercher un début et une fin de ligne.</td>
+        </tr>
+        <tr>
+            <td>s</td>
+            <td>Cette option permet au métacaractère . de remplacer n’importe quel caractère <u>y compris</u> un caractère de nouvelle ligne.</td>
+        </tr>
+        <tr>
+            <td>x</td>
+            <td>Permet d’utiliser des caractères d’espacement dans les masques sans que ceux-ci soient analysés afin de clarifier nos masques. <strong>Attention</strong> cependant à ne pas ajouter d’espace dans les séquences spéciales d’un masque, comme entre un « ( » et un « ? » par exemple.</td>
+        </tr>
+        <tr>
+            <td>u</td>
+            <td>Cette option permet de désactiver les fonctionnalités additionnelles de PCRE qui ne sont pas compatibles avec le langage Perl. Cela peut être très utile dans le cas où on souhaite exporter nos regex.</td>
+        </tr>
+    </table>
+    <h4>exemples</h4>
+    <?php
+        echo 'La chaîne: "Je suis Pierre\nJ\'ai 29 ans".</br>';
+        $chaine = "Je suis Pierre\nJ\'ai 29 ans";
+        
+        echo "</br>";
+        echo "Masque 1: <em>/pie/</em></br>";
+        $masque1 = "/pie/";
+        if(preg_match_all($masque1, $chaine)){
+            echo '"pie" trouvé dans la chaîne</br>';
+        }else{
+            echo '"pie" NON trouvé dans la chaîne</br>';
+        }
+
+        echo "</br>";
+        echo "Masque 2: <em>/pie/i</em></br>";
+        $masque2 = "/pie/i";
+        if(preg_match_all($masque2, $chaine)){
+            echo '"pie" (min ou maj) trouvé dans la chaîne</br>';
+        }else{
+            echo '"pie" (min ou maj) NON trouvé dans la chaîne</br>';
+        }
+
+        echo "</br>";
+        echo "Masque 3: <em>/e$/</em></br>";
+        $masque3 = "/e$/";
+        if(preg_match_all($masque3, $chaine)){
+            echo '"e" trouvé en fin de chaîne</br>';
+        }else{
+            echo '"e" NON trouvé en fin de chaîne</br>';
+        }
+
+        echo "</br>";
+        echo "Masque 4: <em>/e$/m</em></br>";
+        $masque4 = "/e$/m";
+        if(preg_match_all($masque4, $chaine)){
+            echo '"e" trouvé en fin de chaîne</br>';
+        }else{
+            echo '"e" NON trouvé en fin de chaîne</br>';
+        }
+    ?>
+    <h2>Conclusion</h2>
+    <p>Les expressions régulières vont s’avérer particulièrement utiles lorsqu’on voudra vérifier la forme des données envoyées par les utilisateurs. Elles vont par exemple nous permettre de nous assurer qu’un utilisateur a bien exactement envoyé une séquence de 10 chiffres lorsqu’on lui a demandé son numéro de téléphone, ou que le mot de passe choisi par l’utilisateur lors de son inscription contient au moins 8 caractères dont un caractère spécial, une majuscule et un chiffre par exemple.</p>
 </body>
 </html>
