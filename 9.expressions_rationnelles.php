@@ -540,6 +540,50 @@
             </ul>";
     ?>
     <h3>Les sous-masques</h3>
-    283
+    <p>Les métacaractères <span style="font-weight: bolder; color: red;">(</span> et <span style="font-weight: bolder; color: red;">)</span> vont être utilisés pour délimiter des sous masques.</br>
+    <strong>Un sous masque est une partie d’un masque délimitée par un couple de parenthèses.</strong> Ces parenthèses vont nous permettre
+        <ul>
+            <li>d’isoler des alternatives</li>
+            <li>ou de définir sur quelle partie du masque un quantificateur doit s’appliquer.</li>
+        </ul>
+    De manière très schématique, et même si ce n’est pas strictement vrai, vous pouvez considérer qu’on va en faire le même usage que lors d’opérations mathématiques, c’est-à-dire qu’on va s’en servir pour prioriser les calculs.</br>
+    Par défaut, les sous masques vont être <em>capturants</em>. Cela signifie tout simplement que <em>lorsqu’un sous masque est trouvé dans la chaine de caractères, la partie de cette chaine sera capturée (en fait renvoyée)</em>.</p>
+    <?php
+        echo "la chaine1 contient \"Je suis Pierre et j'ai 29 ans.\".</br> ";
+        echo "</br>";
+        $chaine1 = "Je suis Pierre et j'ai 29 ans.</br>";
+
+        echo "<strong>1.</strong> Création du masque1 <em>/er|t/</em> et preg_match_all() sur la chaine1.</br>";
+        $masque1 = "/er|t/";
+        preg_match_all($masque1, $chaine1, $tab1);
+        var_dump($tab1);
+        echo "<strong>Résultat:</strong> Le masque recherche les occurences de \"er\" et de \"t\".</br>";
+        echo "</br>";
+
+        echo "<strong>2.</strong> Création du masque2 <em>/e(r|t)/</em> et preg_match_all() sur la chaine1.</br>";
+        $masque2 = "/e(r|t)/";
+        preg_match_all($masque2, $chaine1, $tab2);
+        var_dump($tab2);
+        echo "<strong>Résultat:</strong> Ce masque contient un sous masque. Le masque nous permet de chercher « er », « et », « r » et « t » car les sous masques sont <strong>capturants:</strong> si un motif du sous masque correspond, la partie de la chaine de caractères dans laquelle on recherche sera capturée. Ici, le sous masque chercher « r » ou « t ». Dès que ces caractères vont être trouvés dans la chaine, ils vont être capturés et renvoyés.</br>";
+        echo "</br>";
+
+        echo "<strong>3.</strong> Création du masque3 <em>/er{2}/</em> et preg_match_all() sur la chaine1.</br>";
+        $masque3 = "/er{2}/";
+        preg_match_all($masque3, $chaine1, $tab3);
+        var_dump($tab3);
+        echo "<strong>Résultat:</strong> pour rappel, a{X} recherche X occurences de « a ».</br>
+        Ce masque recherche donc un « e » suivi de 2 « r ».</br>";
+        echo "</br>";
+
+        echo "<strong>4.</strong> Création du masque4 <em>/(er){2}/</em> et preg_match_all() sur la chaine1.</br>";
+        $masque4 = "/(er){2}/";
+        preg_match_all($masque4, $chaine1, $tab4);
+        var_dump($tab4);
+        echo "<strong>Résultat:</strong> pour rappel, a{X} recherche X occurences de « a ».</br>
+        Ce masque recherche donc une suite de 2 occurences de « er ».</br>";
+        echo "</br>";
+    ?>
+    <h3>Les assertions</h3>
+    
 </body>
 </html>
