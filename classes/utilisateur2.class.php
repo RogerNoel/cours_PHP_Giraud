@@ -1,6 +1,6 @@
 <?php
 class Utilisateur2 {
-    private $user_name;
+    protected $user_name;
     private $user_pass;
 
     public function __construct(string $name, $pass){
