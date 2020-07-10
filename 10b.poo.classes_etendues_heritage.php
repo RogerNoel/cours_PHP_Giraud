@@ -135,5 +135,46 @@
 
     <h2>Les constantes définies dans une classe</h2>
     <h3>Rappel sur les constantes et définition de constantes dans une classe</h3>
+    <p>Une constante est un conteneur qui ne pourra stocker qu’<u>une seule et unique valeur durant la durée de l’exécution</u> d’un script.</br>
+    Pour définir une constante de classe, on va utiliser le mot clef <em>const</em> suivi du nom de la constante <u>en majuscules</u>. </br>
+    <strong>On ne va pas utiliser ici de signe $ comme avec les variables.</strong></br>
+    Depuis la version 7.1 de PHP, on peut définir une visibilité pour nos constantes (public, protected ou private). Par ailleurs, notez également que les constantes sont allouées une fois par classe, et non pour chaque instance de classe. Cela signifie qu’une constante appartient intrinsèquement à la classe et non pas à un objet en particulier et que tous les objets instanciés d’une classe vont donc partager cette même constante de classe.</p>
+    <p>Nous allons créer une classe <em>Admin2</em>, extension de <em>Utilisateur3</em>, à laquelle nous ajoutons immédiatement une constante:</p>
+    <p><em>public const ABONNEMENT = 15;</em></p>
+    <p>Maintenant nous créons un objet <em>$Administrateur2</em>, instance de cette nouvelle classe <em>Admin2</em>.</p>
+    <?php
+        require('./classes/admin2.class.php');
+        $Administrateur2 = new Admin2('BossAdmin2', '2222', 'sud');
+        var_dump($Administrateur2);
+    ?>
+    <h3>Accéder à une constante avec l’opérateur de résolution de portée</h3>
+    <p>Pour accéder à une constante, nous devrons utiliser l’opérateur de résolution de portée. <em>La façon d’accéder à une constante va légèrement varier selon qu’on essaie d’y accéder depuis l’intérieur de la classe qui la définit (ou d’une classe étendue) ou depuis l’extérieur de la classe</em>.</br>
+    Dans le cas où on tente d’accéder à la valeur d’une constante <u>depuis l’intérieur</u> d’une classe, il faudra utiliser l’un des deux mots clefs <em>self</em> ou <em>parent</em> qui vont permettre d’indiquer 
+        <ul>
+            <li>qu’on souhaite accéder à une constante définie dans la classe à partir de laquelle on souhaite y accéder (self),</li>
+            <li>qu’on souhaite accéder à une constante définie dans une classe mère (parent).</li>
+        </ul>
+    </p>
+    <p>Pour illustrer le premier cas, dans la classe <em>Admin2</em>, on créé une fonction qui doit effectuer un calcul dont une des opérandes est la constante <em>ABONNEMENT</em>:</p>
+    <p>
+        <em>
+            <pre>    public function setPrixAbo(){
+        if($this->user_region==='sud'){
+            return $this->prix_abo = self::ABONNEMENT/2;
+        } else {
+            return $this->prix_abo = self::ABONNEMENT;
+        }
+    }
+
+    public function getPrixAbo(){
+        return $this->setPrixAbo();
+    }</pre>
+        </em>
+    </p>
+    <?php
+        echo 'Le prix de l\'abonnement est de ' . $Administrateur2->getPrixAbo() . ' euros.</br>';
+        echo 'Le prix de l\'abonnement pour la classe <em>Admin2</em> est ' .  Admin2::ABONNEMENT . ' euros.</br>';
+        echo 'Le prix de l\'abonnement pour la classe <em>Utilisateur3</em> est ' .  Utilisateur3::ABONNEMENT . ' euros.</br>';
+    ?>
 </body>
 </html>
