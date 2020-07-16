@@ -109,7 +109,57 @@
         $abonneRoger->setPrixAbo();
         var_dump($abonneRoger);
         echo $abonneRoger->getPrixAbo();
-
     ?>
+
+    <h2>Les interfaces</h2>
+    <p>Les interfaces ont un but similaire aux classes abstraites: fournir un plan général pour les développeurs qui vont les implémenter et les forcer à suivre le plan donné par ces interfaces.</br>
+    De la même manière que pour les classes abstraites, on ne peut instancier une interface, il faut l’implémenter, c’est-à-dire créer des classes dérivées de cette interface pour pouvoir utiliser ses éléments.</br>
+    Les deux différences majeures entre les interfaces et les classes abstraites sont les suivantes:
+        <ol>
+            <li>Une interface ne peut contenir que les <u>signatures</u> des méthodes ainsi qu’éventuellement des constantes mais <u>pas de propriétés</u>. Cela est dû au fait qu’aucune implémentation n’est faite dans une interface : une interface n’est véritablement qu’un plan.</li>
+            <li>Une classe ne peut pas étendre plusieurs autres classes à cause des problèmes d’héritage. En revanche, <u>une classe peut tout à fait implémenter plusieurs interfaces</u>.</li>
+        </ol>
+    Je pense qu’il est ici intéressant de bien illustrer ces deux points et notamment d’expliquer pourquoi une classe n’a pas l’autorisation d’étendre plusieurs autres classes. Pour cela, imaginons qu’on ait une première classe A qui définit la signature d’une méthode diamond() sans l’implémenter. Nous créons ensuite deux classes B et C qui étendent la classe A et qui implémentent chacune d’une manière différente la méthode diamond(). Finalement, on crée une classe D qui étend les classes B et C et qui ne redéfinit pas la méthode diamond(). Dans ce cas-là, on est face au problème suivant : la classe D doit-elle utiliser l’implémentation de diamond() faite par la classe B ou celle faite par la classe C ? Ce problème est connu sous le nom du « problème du diamant » et est la raison principale pour laquelle la plupart des langages de programmation orientés objets (dont le PHP) ne permettent pas à une classe d’étendre deux autres classes.</br>
+    En revanche, il ne va y avoir aucun problème par rapport à l’implémentation par une classe de plusieurs interfaces puisque les interfaces, par définition, ne peuvent que définir la signature d’une méthode et non pas son implémentation.</br>
+    (???) Profitez-en ici pour noter que les méthodes déclarées dans une classe doivent obligatoirement être publiques (puisqu’elles devront être implémentées en dehors de l’interface) et que les constantes d’interface ne pourront pas être écrasées par une classe (ou par une autre interface) qui vont en hériter (???).</p>
+    <h3>Définir et implémenter une interface en pratique</h3>
+    <p>On définira une interface de la même manière qu’une classe mais en utilisant cette fois-ci le mot clef <em>interface</em> à la place de <em>class</em>. Nous nommerons généralement nos fichiers d’interface en utilisant <em>« interface »</em> à la place de <em>« classe »</em>. </br>
+    Par exemple, si on crée une interface nommée Utilisateur, on enregistrera le fichier d’interface sous le nom utilisateur.interface.php par convention.</p>
+    <p>
+        <em>
+            <pre>interface utilisateur {
+                public const ABONNEMENT = 15;
+                public function getNom();
+                public function setPrixAbo();
+                public function getPrixAbo();
+}               </pre>
+        </em>
+    </p>
+    <p>On pourra réutiliser les définitions de notre interface dans des classes.</br>
+    Pour cela, on va implémenter notre interface avec le mot-clef <em>implements</em>:</p>
+    <p><em>class Abonne implements Utilisateur { ...</em></p>
+    <?php
+        require('./classes/abonne5.class.php');
+        require('./classes/admin5.class.php');
+        $abonneLuc = new Abonne5('Defoy', 'pass123', 'Est');
+        echo 'Nom de $abonneLuc = ' . $abonneLuc->getNom() . '</br>';
+        echo 'Le prix de son abonnement est de ' . $abonneLuc->getPrixAbo() . ' euros.</br>';
+        echo '</br> Création d\'un nouvel Admin5: </br>';
+        $adminNath = new Admin5("Nath", "Sud", "4899");
+        var_dump($adminNath);
+        echo 'L\'admin s\'appelle ' . $adminNath->getNom() . '</br>';
+        $adminNath->setNom('NathD');
+        echo 'L\'admin s\'appelle ' . $adminNath->getNom() . '</br>';
+        echo 'Le prix de l\'abonnement de ' . $adminNath->getNom() . ' se monte à ' . $adminNath->getPrixAbo() . ' euros.</br>';
+        $adminNath->setBan('Tom', 'Tao');
+        $adminNath->getBan();
+        $adminFred = new Admin5('Fred', 'Nord', '5544');
+        $adminFred->setBan('Marc');
+        $adminFred->getBan();
+    ?>
+    <p><strong>Remarque:</strong> pour accéder à une constante d’interface, il faut préciser le nom de l’interface devant l’opérateur de résolution de portée:</p>
+    <p><em>return $this->prix_abo = <strong>Utilisateur5::ABONNEMENT/6</strong>;</em></p>
+    <p><strong>NOTE:</strong> on peut étendre une interface en utilisant le mot clef <em>extends</em>. Dans ce cas, on crééra des interfaces étendues qui devront être implémentées par des classes (<em>class ... implements ...</em>) de la même manière que les interfaces classiques.</p>
+    <h3>Interface ou classe abstraite : comment choisir?</h3>
 </body>
 </html>
