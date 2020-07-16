@@ -62,5 +62,54 @@
         $adminTom->setBan('banniparTom1', 'banniparTom2');
         $adminJean->getBan();
     ?>
+
+    <h2>Méthodes et classes abstraites</h2>
+    <h3>Les classes et méthodes abstraites : définition et intérêt</h3>
+    <p>Une <u>classe abstraite</u> est une classe qui ne pourra pas être instanciée directement et donc qu'on ne pourra pas manipuler directement.</br>
+    Une <u>méthode abstraite</u> est une méthode dont seule la signature (c’est-à-dire le nom et les paramètres) pourra être déclarée mais pour laquelle on ne pourra pas déclarer d’implémentation (c’est-à-dire le code dans la fonction ou ce que fait la fonction). En gros: une fonction qui ne fait rien entre les {}.</p>
+    <p><u>Dès qu’une classe possède une méthode abstraite, il faudra la déclarer comme abstraite</u>.</p>
+    <p>L’intérêt principal de définir une classe comme abstraite sera de fournir un cadre strict lorsque d'autres développeurs utiliseront notre code en les forçant à définir certaines méthodes par exemple.</br>
+    En effet, une classe abstraite ne peut pas être instanciée directement et contient généralement des méthodes abstraites. <em>L’idée ici va donc être de définir des classes mères abstraites et de pousser les développeurs à étendre ces classes.</em></br>
+    Lors de l’héritage d’une classe abstraite, les <u>méthodes déclarées comme abstraites</u> dans la classe parent <u>doivent obligatoirement être définies dans la classe enfant</u> avec des signatures (nom et paramètres) correspondantes. Cette façon de faire sera très utile pour fournir une ligne directrice dans le cas de développements futurs. En effet, en créant un plan « protégé » (puisqu’une classe abstraite ne peut pas être instanciée directement) on force les développeurs à étendre cette classe et on les force également à définir les méthodes abstraites. Cela nous permet de nous assurer que certains éléments figurent bien dans la classe étendue et permet d’éviter certains problèmes de compatibilité en nous assurant que les classes étendues possèdent une structure de base commune.</p>
+    <h3>Définir des classes et des méthodes abstraites en pratique</h3>
+    <p>Pour définir une classe ou une méthode comme abstraite, nous allons utiliser le mot clef <em>abstract</em>.
+    Une classe abstraite n’est pas structurellement différente d’une classe classique (à la différence de la présence potentielle de méthodes abstraites) et qu’on va donc tout à fait pouvoir ajouter des constantes, des propriétés et des méthodes classiques dans une classe abstraite.</br>
+    Les seules différences sont qu’une classe abstraite <em>peut</em> contenir des méthodes abstraites et <strong>doit</strong> obligatoirement être étendue pour utiliser ses fonctionnalités.</br>
+    Pour illustrer de manière pratique l’intérêt des classes et méthodes abstraites, créons les classes <em>Utilisateur4</em> et <em>Admin4</em>.</br>
+    Précédemment, nous avions créé une méthode <em>setPrixAbo()</em> qui calculait le prix de l’abonnement pour un utilisateur classique dans notre classe Utilisateur et on avait surchargé le code de cette fonction dans Admin pour calculer un prix d’abonnement différent pour les admin.</br>
+    Ici, cela rend notre code conceptuellement étrange car cela signifie que <em>Utilisateur4</em> définit des choses pour un type d’utilisateur qui sont les utilisateurs « de base » tandis que <em>Admin4</em> les définit pour un autre type d’utilisateur qui sont les « admin ».</br>
+    Le souci que j’ai avec ce code est que chacune de nos deux classes s’adresse à un type différent d’utilisateur mais que nos deux classes ne sont pas au même niveau puisque Admin est un enfant de Utilisateur: normalement, si notre code est bien construit, on devrait voir une hiérarchie claire entre ce que représentent nos classes mères et nos classes enfants. Dans le cas présent, j’aimerais que ma classe mère définisse des choses pour TOUS les types d’utilisateurs et que les classes étendues s’occupent chacune de définir des spécificités pour UN type d’utilisateur en particulier.</br>
+    Encore une fois, ici, on touche à des notions qui sont plus "de design" de conception que des notions de code en soi mais lorsqu’on code, la façon dont on crée et organise le code est au moins aussi importante que le code en soi. Il faut donc toujours essayer d’avoir la structure globale la plus claire et la plus pertinente possible.</br>
+    Ici, nous allons donc partir du principe que nous avons deux grands types d’utilisateurs: les utilisateurs classiques et les administrateurs. On va donc transformer notre classe <em>Utilisateur4</em> afin qu’elle ne définisse que les choses communes à tous les utilisateurs et allons définir les spécificités de chaque type utilisateur dans des classes étendues <em>Admin4</em> et <em>Abonne4</em>.</p>
+    <p>On commence par modifier la classe parent <em>Utilisateur4</em> en la définissant comme "abstract".</p>
+    <p><em>abstract class Utilisateur4 { ... </em></p>
+    <p>On supprime le constructeur qui sera, lui, défini dans les classes étendues et on déclare également la méthode setPrixAbo() comme abstraite.</p>
+    <p><em>abstract public function setPrixAbo();</em></p>
+    <p>En définissant <em>setPrixAbo()</em> comme abstraite, on force ainsi les classes étendues à l’implémenter.</p>
+    <h3>Étendre des classes abstraites et implémenter des méthodes abstraites</h3>
+    <p>Maintenant qu’on a défini notre classe <em>Utilisateur4</em> comme abstraite, il va falloir l’étendre et également implémenter les méthodes abstraites.</br>
+    On va commencer par aller dans notre classe étendue <em>Admin4</em> et supprimer la constante <em>ABONNEMENT</em> puisque nous allons désormais utiliser celle de la classe abstraite. On va donc également modifier le code de notre méthode <em>setPrixAbo()</em>.</p>
+    <?php
+        require('./classes/abonne4.class.php');
+        require('./classes/admin4.class.php');
+        $abonneRoger = new Abonne4('Roger', 'oooo', 'Sud');
+        $adminTom = new Admin4('Tom', 'ppp', 'Nord');
+        $adminTom->getNom();
+        $adminTom->setNom('Lucky');
+        $adminTom->getNom();
+        $adminTom->setPasse('papou');
+        var_dump($adminTom);
+        $adminTom->setPrixAbo();
+        var_dump($adminTom);
+        $adminTom->setBan('Lulu');
+        $adminTom->getBan();
+        var_dump($abonneRoger);
+        $nom = $abonneRoger->getNom();
+        print_r($nom);
+        $abonneRoger->setPrixAbo();
+        var_dump($abonneRoger);
+        echo $abonneRoger->getPrixAbo();
+
+    ?>
 </body>
 </html>
