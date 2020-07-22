@@ -331,7 +331,30 @@ Admin6::test2('arg1', 'arg2');
             </li>
             <li>
                 <h3>__invoke()</h3>
-                368
+                <p>La méthode <em>__invoke()</em> <u>va être appelée dès qu’on tente d’appeler un objet comme une fonction</u>.</p>
+                <p>
+                    <em>
+                        <pre>
+    public function __invoke($arg)
+    {
+        echo 'Un objet a été utilisé comme une fonction avec comme argument passé: ' . $arg . '</br>';
+    }
+                        </pre>
+                    </em>
+                </p>
+                <p><em><pre>
+    $tintin = new Admin9('Tintin', 'Nord', 'milow');
+    $tintin('pwet');
+                </pre></em></p>
+                <?php
+                    require './classes/admin9.class.php';
+                    $tintin = new Admin9('Tintin', 'Nord', 'milow');
+                    $tintin('pwet');
+                ?>
+            </li>
+            <li>
+                <h3>__clone()</h3>
+                370
             </li>
         </ul>
     </p>
