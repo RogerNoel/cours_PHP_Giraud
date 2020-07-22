@@ -12,7 +12,7 @@
     <h3>Étendre une classe : principe et utilité</h3>
 
     <p>Un des grands intérêts de la POO est qu’on va pouvoir rendre notre code très modulable, ce qui va être très utile pour gérer un gros projet ou si on souhaite le distribuer à d’autres développeurs.</br>
-    Cette modularité est possible de par le principe de séparation des classes, de par la réutilisation de certaines classes et de par l’implémentation de nouvelles classes en plus de classes de base déjà existantes.</br>
+    Cette modularité est possible grâce au principe de séparation des classes, de réutilisation de certaines classes et de l’implémentation de nouvelles classes en plus de classes de base déjà existantes.</br>
     Sur ce dernier point, justement, il sera possible -plutôt que de créer des classes complètement nouvelles- d’étendre (les possibilités) de classes existantes, c’est-à-dire de créer de nouvelles classes qui vont <strong>hériter</strong> des méthodes et propriétés de la classe qu’elles étendent (<em>sous réserve d’y avoir accès!</em>) tout en définissant de nouvelles propriétés et méthodes qui leur sont propres.</br>
     Certains développeurs vont pourront ainsi proposer de nouvelles fonctionnalités sans casser la structure originale de notre code et de nos scripts. C’est d’ailleurs tout le principe de la solution e-commerce PrestaShop (nous reparlerons de cela en fin de chapitre).</p>
     <p>Nous allons pouvoir étendre une classe grâce au mot clef <strong><em>extends</em></strong>. En utilisant ce mot clef, on créera une classe « fille » qui héritera de toutes les propriétés et méthodes de son parent par défaut et qui pourra les manipuler de la même façon (à condition de pouvoir y accéder).</br>

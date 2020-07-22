@@ -19,7 +19,7 @@
     </ul>    
     Pour être tout à fait précis, <em>nous ne pourrons pas accéder à une propriété statique depuis un objet</em>. </br>
     En revanche, ce sera possible dans le cas d’une méthode statique.</br>
-    <strong>Attention</strong> à ne pas confondre <u>propriétés statiques</u> et <u>constantes de classe</u>: une propriété statique <em>peut tout à fait changer de valeur</em> au cours du temps à la différence d’une constante dont la valeur est fixée. Simplement, <u>la valeur</u> d’une propriété statique sera partagée par tous les objets issus de la classe dans laquelle elle a été définie.</br>
+    <strong>Attention</strong> à ne pas confondre <u>propriétés statiques</u> et <u>constantes de classe</u>: une propriété statique <em>peut tout à fait changer de valeur</em> au cours du temps à la différence d’une constante dont la valeur est fixée. Simplement, <strong><u>la valeur</u> d’une propriété statique sera partagée par tous les objets issus de la classe dans laquelle elle a été définie.</strong></br>
     De manière générale, nous n’utiliserons quasiment jamais de méthode statique car il n’y aura que très rarement d’intérêt à en utiliser. En revanche, les propriétés statiques vont s’avérer utiles dans de nombreux cas.</p>
     <h4>Définir et accéder à des propriétés et à des méthodes statiques</h4>
     <p>On va pouvoir définir une propriété ou une méthode statique à l’aide du mot clef <em>static</em>.</br>
@@ -28,7 +28,7 @@
     Pour faire cela, on commence par déclarer la propriété <em>$ban</em> comme <strong>statique</strong> et ensuite on modifie le code des méthodes <em>getBan()</em> et <em>setBan()</em>: en effet, on ne peut pas accéder à une propriété statique depuis un objet, et on ne va donc pas pouvoir utiliser l’opérateur objet <em>"->"</em> pour accéder à la propriété statique. Pour ce faire, nous allons utiliser l’opérateur de résolution de portée <em>"::"</em>.</p>
     <p> <em>protected static $ban = [];</em> </p>
     <p>La propriété <em>$ban</em> appartient dès lors à la classe et sa valeur sera diffusée vers tous les objets de la classe.</p>
-    <p>Ensuite on modifie <em>setBan()</em> pour utiliser la propriété statique. Rappel de la syntaxe "..." devant la liste dzs arguments: elle permet à une fonction d'accepter un nombre indéfini d'arguments, ceci afin de bannir une ou plusieurs personnes d'une seul coup. </br>
+    <p>Ensuite on modifie <em>setBan()</em> pour utiliser la propriété statique. Rappel de la syntaxe "..." devant la liste des arguments: elle permet à une fonction d'accepter un nombre indéfini d'arguments, ceci afin de bannir une ou plusieurs personnes d'une seul coup. </br>
     Ensuite, dans la méthode, on remplace <em>$this->ban</em> par <em>self::$ban</em> puisque la propriété <em>$ban</em> est désormais statique: il faut donc utiliser l'opérateur de portée pour y accéder.</p>
     <p>
         <em>
@@ -161,5 +161,180 @@
     <p><em>return $this->prix_abo = <strong>Utilisateur5::ABONNEMENT/6</strong>;</em></p>
     <p><strong>NOTE:</strong> on peut étendre une interface en utilisant le mot clef <em>extends</em>. Dans ce cas, on crééra des interfaces étendues qui devront être implémentées par des classes (<em>class ... implements ...</em>) de la même manière que les interfaces classiques.</p>
     <h3>Interface ou classe abstraite : comment choisir?</h3>
+    <p>Les interfaces et les classes abstraites semblent <em>à priori</em> servir un objectif similaire qui est de créer des plans ou le design de futures classes.</p>
+    <p>Les <u>interfaces</u> ne permettent aucune implémentation mais permettent simplement de définir des <u>signatures de méthodes et des constantes</u> tandis que, dans une classe abstraite, on pourra tout à fait définir et implémenter des méthodes.</p>
+    <p>Ainsi, lorsque plusieurs classes possèdent des similarités, on crééra plutôt une classe mère abstraite dans laquelle on va pouvoir implémenter les méthodes communes puis d’étendre cette classe.</br>
+    En revanche, si nous avons des classes qui possèderont les mêmes méthodes mais qui vont les implémenter de manière différente, alors il sera certainement plus adapté de créer une interface pour définir les signatures des méthodes communes et d’implémenter cette interface pour laisser le soin à chaque classe fille d’implémenter les méthodes comme elles le souhaitent.</p>
+    <p>Dans notre cas, par exemple, nos types d’utilisateurs partagent de nombreuses choses. Il est donc ici plus intéressant de créer une classe abstraite plutôt qu’une interface.</p>
+
+    <h2>Les interfaces prédéfinies</h2>
+    <p>De la même manière qu’il existe des <em>classes</em> prédéfinies (des classes natives prêtes à l’emploi en PHP), nous pourrons utiliser des <em>interfaces prédéfinies</em>.</br>
+    Parmi celles-ci, nous pouvons notamment noter :    
+        <ul>
+            <li>L’interface <u>Traversable</u> dont le but est d’être l’interface de base de toutes les classes permettant de parcourir des objets.</li>
+            <li>L’interface <u>Iterator</u> qui définit des signatures de méthodes pour les itérateurs.</li>
+            <li>L’interface <u>IteratorAggregate</u> qui est une interface qu’on va pouvoir utiliser pour créer un itérateur externe.</li>
+            <li>L’interface <u>Throwable</u> qui est l’interface de base pour la gestion des erreurs et des exceptions.</li>
+            <li>L’interface <u>ArrayAccess</u> qui permet d’accéder aux objets de la même façon que pour les tableaux.</li>
+            <li>L’interface <u>Serializable</u> qui permet de personnaliser la linéarisation d’objets.</li>
+        </ul>
+    Nous n’allons pas étudier ces interfaces en détail ici. Cependant, nous en utiliserons 
+    certaines dans les parties à venir et notamment <em>Throwable</em> et des classes     dérivées prédéfinies <em>Error</em> et <em>Exception</em> dans la partie liée à la gestion des erreurs et des exceptions.
+    </p>
+
+    <h2>Les méthodes <em>magiques</em></h2>
+    <p>Ce sont des méthodes qui seront appelées automatiquement suite à un évènement déclencheur propre à chacune d’entre elles. Nous allons établir la liste complète de ces méthodes magiques en PHP7 et illustrer le rôle de chacune d’entre elles.</p>
+    <p>
+        <ul>
+            <li>
+                <h3>__construct() et __destruct()</h3>
+                <p>Nous les connaissons, ce sont les  « constructeur » et « destructeur ».</br>
+                La méthode <strong>__construct()</strong> <u>va être appelée dès qu’on va instancier</u> une classe possédant un constructeur. Cette méthode est très utile pour initialiser les valeurs dont un objet a besoin dès sa création et avant toute utilisation de celui-ci.</br>
+                La méthode <strong>__destruct()</strong> va être appelée dès qu’il n’y a plus de référence sur un objet donné ou dès qu’un objet n’existe plus dans le contexte d’une certaine application. Bien évidemment, pour que le destructeur soit appelé, vous devrez le définir dans la définition de la classe tout comme on a l’habitude de le faire avec le constructeur.</br>
+                Le destructeur servira à « nettoyer » le code en détruisant un objet une fois qu’on a fini de l’utiliser. Définir un destructeur va être particulièrement utile pour effectuer des opérations juste avant que l’objet soit détruit. En effet, en utilisant un destructeur nous avons la maitrise sur le moment exact où l’objet va être détruit. Ainsi, on va pouvoir exécuter au sein de notre destructeur différentes commandes comme sauvegarder des dernières valeurs de l’objet dans une base de données, fermer la connexion à une base de données, etc. juste avant que celui-ci soit détruit.
+                </p>
+            </li>
+            <li>
+                <h3>__call() et __callStatic()</h3>
+                <p>La méthode <strong>__call()</strong> <u>sera appelée dès qu’on essaie d’utiliser une méthode qui n’existe pas</u> (ou qui est inaccessible) à partir d’un objet. On va passer deux arguments à cette méthode:
+                    <ul>
+                        <li>le nom de la méthode qu’on essaie d’exécuter,</li>
+                        <li>ainsi que les arguments relatifs à celle-ci (si elle en a).</li>
+                    </ul>   
+                Ces arguments vont être convertis en un tableau.</br>
+                La méthode <strong>__callStatic()</strong> s’exécute dès qu’on essaie d’utiliser une méthode qui n’existe pas (ou qui est inaccessible) <u>dans un contexte statique cette fois-ci</u>. Cette méthode accepte les mêmes arguments que __call().</br>
+                <em> Ces deux méthodes vont donc s’avérer très utiles pour contrôler un script et pour éviter des erreurs fatales qui l’empêcheraient de s’exécuter convenablement ou même pour prévenir des failles de sécurité</em>.
+                </p>
+                <p>Créons une classe abstraite <em>Utilisateur6</em></p>
+                <p>
+                    <em>
+                        <pre>
+abstract class Utilisateur6 {
+    protected $user_name;
+    protected $user_region;
+    protected $prix_abo;
+    protected $user_pass;
+    
+    public const ABONNEMENT = 15;
+
+    public function __destruct(){
+        // du code ici
+    }
+
+    abstract public function setPrixAbo();
+
+    public function getNom(){
+        return $this->user_name;
+    }
+
+    public function getPrixAbo(){
+        return $this->setPrixAbo();
+    }
+
+    // méthodes magiques __call() et __callStatic()
+    public function __call($methode, $args)
+    {
+        echo 'Méthode ' . $methode . ' inaccessible depuis un contexte objet.</br>Arguments passés: ' . implode(', ', $args) . '</br>';
+    }
+
+    public function __callStatic($methode, $args)
+    {
+        echo 'Méthode ' . $methode . ' inaccessible depuis un contexte statique.</br>Arguments passés: ' . implode(', ', $args) . '</br>';
+    }
+                        </pre>
+                    </em>
+                </p>
+                <p>Si une méthode appelée depuis un contexte objet est inaccessible, <em>__call()</em> va être appelée automatiquement.</br>
+                Si une méthode appelée depuis un contexte statique est inaccessible, <em>__callStatic()</em> va être appelée automatiquement.</br>
+                Nos méthodes vont ici simplement renvoyer un texte avec le nom de la méthode inaccessible et les arguments passés. <u>Encore une fois, il faut bien comprendre que ce qui définit une méthode magique est simplement le fait que ces méthodes vont être appelées automatiquement dans un certain contexte</u>. Cependant, les méthodes magiques ne sont pas des méthodes prédéfinies et il va donc déjà falloir les définir quelque part pour qu’elles soient appelées et également leur fournir un code à exécuter.</br>
+                Pour tester le fonctionnement de ces deux méthodes, il suffit d’essayer d’exécuter des méthodes qui n’existent pas dans notre script principal:
+                </p>
+                <p>
+                    <em>
+                        <pre>
+require './classes/admin6.class.php';
+$newAdmin = new Admin6('Marcel', 'Sud', '2222');
+var_dump($newAdmin);
+echo $newAdmin->getPrixAbo() . '</br>';
+$newAdmin->test1('argument1');
+echo '</br>';
+Admin6::test2('arg1', 'arg2'); 
+                        </pre>
+                    </em>
+                </p>
+                <?php
+                require './classes/admin6.class.php';
+                    $newAdmin = new Admin6('Marcel', 'Sud', '2222');
+                    var_dump($newAdmin);
+                    echo $newAdmin->getPrixAbo() . '</br>';
+                    $newAdmin->test1('argument1');
+                    echo '</br>';
+                    Admin6::test2('arg1', 'arg2');
+                ?>
+            </li>
+            <li>
+                <h3>__get(), __set(), __isset() et __unset()</h3>
+                <p>La méthode <em>__get()</em> <u>va s’exécuter si on tente d’accéder à une propriété inaccessible</u> (ou qui n’existe pas) dans une classe. Elle va prendre en argument le nom de la propriété à laquelle on souhaite accéder.</br>
+                La méthode <em>__set()</em> <u>s’exécute dès qu’on tente de créer ou de mettre à jour une propriété inaccessible</u> (ou qui n’existe pas) dans une classe. Cette méthode va prendre comme arguments le nom et la valeur de la propriété qu’on tente de créer ou de mettre à jour.
+                </p>
+                <p>Nous avons créé une classe abstraite <em>Utilisateur7</em> avec les méthodes suivantes:</p>
+                <p>
+                    <em>
+                        <pre>
+                        public function __get($propriete)
+    {
+        echo 'Propriété ' . $propriete . ' inaccessible.</br>';
+    }
+
+    public function __set($propriete, $valeur)
+    {
+        echo 'Impossible de mettre à jour la propriété ' . $propriete . ' avec la valeur ' . $valeur . ' (propriété inaccessible).</br>';
+    }
+                        </pre>
+                    </em>
+                </p>
+                <?php
+                    require './classes/admin7.class.php';
+                    $admin7 = new Admin7('Machin', 'Nord', 'pwet');
+                    echo 'Prix abonnement: ' . $admin7->getPrixAbo().'</br>';
+                    $admin7->prixAbo;
+                    echo '</br>';
+                    $admin7->prixAbo = 7;
+                ?>
+                <p>De manière similaire, la méthode <em>__isset()</em> <u>va s’exécuter lorsque les fonctions isset() ou empty() sont appelées sur des propriétés inaccessibles</u>.</br>
+                La fonction isset() va servir à déterminer si une variable est définie et si elle est différente de NULL tandis que la fonction empty() permet de déterminer si une variable est vide.</br>
+                Finalement, la méthode <em>__unset()</em> <u>va s’exécuter lorsque la fonction unset() est appelée sur des propriétés inaccessibles</u>. La fonction unset() sert à détruire une variable.</br>
+                Notez par ailleurs que les 4 méthodes magiques __get(), __set(), __isset() et __empty() ne vont pas pouvoir fonctionner dans un contexte statique mais uniquement dans un contexte objet.
+                </p>
+            </li>
+            <li>
+                <h3>__toString()</h3>
+                <p>La méthode <em>__toString()</em> <u>va être appelée dès que l’on va traiter un objet comme une chaine de caractères (par exemple lorsqu’on tente d’echo un objet)</u>. <strong>Attention</strong>, cette méthode doit obligatoirement retourner une chaine ou une erreur sera levée par le PHP.
+                </p>
+                <p>
+                    <em>
+                        <pre>
+    public function __toString()
+    {
+        return 'Nom d\'utilisateur: ' . $this->user_name . '</br>
+        Prix de l\'abonnement: ' . $this->prix_abo . '</br>';
+    }
+                        </pre>
+                    </em>
+                </p>
+                <?php
+                    require './classes/admin8.class.php';
+                    $toto = new Admin8('Tata', 'Sud', '6666');
+                    $toto->setPrixAbo();
+                    echo $toto;
+                ?>
+            </li>
+            <li>
+                <h3>__invoke()</h3>
+                368
+            </li>
+        </ul>
+    </p>
+
 </body>
 </html>
