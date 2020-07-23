@@ -354,7 +354,14 @@ Admin6::test2('arg1', 'arg2');
             </li>
             <li>
                 <h3>__clone()</h3>
-                370
+                <p>La méthode <em>__clone()</em> <u>s’exécute dès que l’on crée un clone d’un objet pour le nouvel objet créé</u>. Cette méthode permet notamment de modifier les propriétés qui doivent l’être après avoir créé un clone pour le clone en question.</br>
+                Nous parlerons du clonage d’objet dans un chapitre ultérieur.
+                </p>
+            </li>
+            <li>
+                <h3>__sleep(), __wakeup(), __set_state() et debugInfo()</h3>
+                <p>Nous n’étudierons pas ces méthodes simplement car elles répondent à des besoins très précis et n'auront d’intérêt que dans un contexte et dans un environnement spécifique.
+                </p>
             </li>
         </ul>
     </p>
