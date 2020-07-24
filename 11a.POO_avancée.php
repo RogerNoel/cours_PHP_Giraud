@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POO avancée</title>
+    <title>POO avancée 1</title>
 </head>
 <body>
     <h1>Programmation orientée objet - Notions avancées</h1>
@@ -308,7 +308,7 @@
                         $this->ageEnfant = $age;
                     }
                     public function getDatas(){
-                        echo 'Nom: '. $this->nom . '. Age: ' . $this->ageEnfant . '.</br>';
+                        echo 'Nom: '. $this->nom . '. Age: ' . $this->ageEnfant;
                     }
                 };
             }
