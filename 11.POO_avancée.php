@@ -155,5 +155,194 @@
     ?>
 
     <h2>Définition et intérêt des classes anonymes</h2>
+    <p>Les classes anonymes ont été implémentées récemment en PHP, puisque leur support n’a été ajouté qu’avec le PHP 7.</br>
+    Les classes anonymes sont des classes qui ne possèdent pas de nom. On peut les stocker dans une variable. <u>Elles sont utiles dans le cas ou des objets simples et uniques ont besoin d’être créés à la volée (??? mais encore ...)</u>.</br>
+    Créer des classes anonymes sert donc principalement à faire gagner du temps. On passera des arguments aux classes anonymes via la méthode constructeur et celles-ci pourront étendre d’autres classes ou encore implémenter des interfaces et (???)<em>utiliser des traits</em>(???) comme le ferait une classe ordinaire.</br>
+    Notez qu’on pourra aussi imbriquer une classe anonyme à l’intérieur d’une autre classe. Toutefois, on n’aura dans ce cas pas accès aux méthodes ou propriétés privées ou protégées de la classe contenante. Pour utiliser des méthodes ou propriétés protégées de la classe contenante, la classe anonyme doit étendre celle-ci. Pour utiliser les propriétés privées de la classe contenant dans la classe anonyme, il faudra les passer via le constructeur.</p>
+    <h3>Exemples</h3>
+    <p>Création d'une classe anonyme stockée dans une variable qui devient de fait un objet:</p>
+    <p>
+        <em>
+            <pre>
+        $maClasseAnonyme = new class{
+            public $userName;
+            public const BONJOUR = 'bonjour';
+
+            public function setNom($nom){
+                $this->userName = $nom;
+            }
+            public function getNom(){
+                return 'Le nom de l\'objet est: ' . $this->userName;
+            }
+        };
+        $maClasseAnonyme->setNom('Roger');
+        var_dump($maClasseAnonyme);
+        echo $maClasseAnonyme->getNom();
+            </pre>
+        </em>
+    </p>
+    <?php
+        $maClasseAnonyme = new class{
+            public $userName;
+            public const BONJOUR = 'bonjour';
+
+            public function setNom($nom){
+                $this->userName = $nom;
+            }
+            public function getNom(){
+                return 'Le nom de l\'objet est: ' . $this->userName;
+            }
+        };
+        $maClasseAnonyme->setNom('Roger');
+        var_dump($maClasseAnonyme);
+        echo $maClasseAnonyme->getNom() . '</br>';
+    ?>
+    <p>On peut encore assigner une classe anonyme à une variable en passant par une fonction:</p>
+    <p>
+        <em>
+            <pre>
+    function toto(){
+        return new class{
+            public $userName;
+            public const BONJOUR = 'Bonjour';
+
+            public function setNom($nom){
+                $this->userName = $nom;
+            }
+            public function getNom(){
+                return 'Le nom de l\'objet est: ' . $this->userName;
+            }
+        };
+    }
+    // on assigne la fonction à une variable $tintin: $tintin devient donc la classe anonyme
+    $tintin = toto();
+    // et donc $tintin acquiert les méthodes, propriétés et constantes de la classe anonyme
+    $tintin->setNom('Tintin');
+    echo $tintin::BONJOUR;
+    echo $tintin->getNom();
+            </pre>
+        </em>
+    </p>
+    <?php
+    // création d'une fonction nommée; elle créé une classe anonyme
+    function toto(){
+        return new class{
+            public $userName;
+            public const BONJOUR = 'Bonjour';
+
+            public function setNom($nom){
+                $this->userName = $nom;
+            }
+            public function getNom(){
+                return 'Le nom de l\'objet est: ' . $this->userName;
+            }
+        };
+    }
+    // on assigne la fonction à une variable $tintin: $tintin devient donc la classe anonyme
+    $tintin = toto();
+    // et donc $tintin acquiert les méthodes, propriétés et constantes de la classe anonyme
+    $tintin->setNom('Tintin');
+    echo $tintin::BONJOUR;
+    echo '</br>';
+    echo $tintin->getNom();
+    echo '</br>';
+    ?>
+    <p>Finalement, on peut également passer des arguments à une classe anonyme pour créer un constructeur.</p>
+    <p>
+        <em>
+            <pre>
+        function createClasseAnonyme($nom){
+            return new class($nom){
+                public $userName;
+    
+                public function __construct($nom){
+                    $this->userName = $nom;
+                }
+                public function getNom(){
+                    return 'Le nom de l\'objet est: ' . $this->userName;
+                }
+            };
+        }
+
+        $plouf = createClasseAnonyme('Machin');
+        echo $plouf->getNom();
+            </pre>
+        </em>
+    </p>
+    <?php
+        function createClasseAnonyme($nom){
+            return new class($nom){
+                public $userName;
+    
+                public function __construct($nom){
+                    $this->userName = $nom;
+                }
+                public function getNom(){
+                    return 'Le nom de l\'objet est: ' . $this->userName;
+                }
+            };
+        }
+
+        $plouf = createClasseAnonyme('Machin');
+        echo $plouf->getNom();
+    ?>
+    <p>Finalement, retenez que <u>dans le cas où une classe anonyme est imbriquée dans une autre classe, la classe anonyme doit l’étendre afin de pouvoir utiliser ses propriétés et méthodes <strong>protégées</strong></u>.</br>
+    Pour utiliser ses méthodes et propriétés privées, alors il faudra également les passer via le constructeur. Regardez plutôt l’exemple suivant :</p>
+    <p>
+        <em>
+            <pre>
+        class Parente{
+            // propriété privée nécessitera un constructeur
+            private $age = 30;    
+            // propriété protégée
+            protected $nom = 'Manon';   
+
+            // on créé la fonction qui doit fabriquer une classe
+            public function creationClasseAnonyme(){
+                // extends pour récupérer les propriétés protégées
+                return new class($this->age) extends Parente{ 
+                
+                    private $ageEnfant;
+                    public function __construct($age)
+                    {
+                        $this->ageEnfant = $age;
+                    }
+                    public function getDatas(){
+                        echo 'Nom: '. $this->nom . '. Age: ' . $this->ageEnfant . '.</br>';
+                    }
+                };
+            }
+        }
+        $haddock = new Parente;
+        $haddock->creationClasseAnonyme()->getDatas();
+            </pre>
+        </em>
+    </p>
+    <?php
+        class Parente{
+            // propriété privée nécessitera un constructeur
+            private $age = 30;    
+            // propriété protégée
+            protected $nom = 'Manon';   
+
+            // on créé la fonction qui doit fabriquer une classe
+            public function creationClasseAnonyme(){
+                // extends pour récupérer les propriétés protégées
+                return new class($this->age) extends Parente{ 
+                
+                    private $ageEnfant;
+                    public function __construct($age)
+                    {
+                        $this->ageEnfant = $age;
+                    }
+                    public function getDatas(){
+                        echo 'Nom: '. $this->nom . '. Age: ' . $this->ageEnfant . '.</br>';
+                    }
+                };
+            }
+        }
+        $haddock = new Parente;
+        $haddock->creationClasseAnonyme()->getDatas();
+    ?>
 </body>
 </html>
