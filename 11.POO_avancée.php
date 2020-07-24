@@ -13,7 +13,7 @@
     En pratique, il suffira d’utiliser l’opérateur d’objet pour chainer différentes méthodes. On écrira quelque chose de la forme <strong><em>$objet->methode1()->methode2()</em></strong>.</br>
     Cependant, pour pouvoir utiliser le chainage de méthodes, il faudra que les méthodes chainées retournent l'objet afin de pouvoir exécuter la méthode suivante. Dans le cas contraire, une erreur sera renvoyée.</p>
 
-    <h2>Chainage de méthodes en pratiques</h2>
+    <h2>Chainage de méthodes en pratique</h2>
     <p>Prenons immédiatement un exemple afin de bien comprendre comment fonctionne le chainage de méthodes. Pour cela, nous allons nous appuyer sur la classe Utilisateur10, qui aura deux nouvelles méthodes:</p>
     <p>
         <em>
@@ -34,7 +34,7 @@
             </pre>
         </em>
     </p>
-    <p><strong>Notez bien</strong> l’instruction <u>return $this</em></u> <em> à la fin du code de chacune de nos deux méthodes.</br>
+    <p><strong>Notez bien</strong> l’instruction <u><em>return $this</em></u> à la fin du code de chacune de nos deux méthodes.</br>
     <strong>Cette instruction est obligatoire</strong>. En effet, comme précisé plus haut, vous devez <u>impérativement</u> retourner l’objet en soi pour pouvoir utiliser le chainage de méthodes. Si vous omettez le <em>return $this</em> vous allez avoir une erreur.</br>
     La grande limitation des méthodes chainées est donc qu’on doit retourner l’objet afin que la méthode suivante s’exécute. On ne peut donc pas utiliser nos méthodes pour retourner une quelconque autre valeur puisqu’on ne peut retourner qu’une chose en PHP.</p>
     <p>Test de: <em>$pierre->plusUn()->plusUn()->moinsUn()->plusUn();</em></p>
@@ -44,5 +44,116 @@
         $pierre = new Admin10('Pierre', 'Nord', '2525');
         $pierre->plusUn()->plusUn()->moinsUn()->plusUn();
     ?>
+
+    <h2>Closures et classes anonymes</h2>
+    <p>Les <u>fonctions anonymes, ou closures</u>, sont des fonctions qui ne possèdent pas de nom.</br>
+    On créé une fonction anonyme de la même façon qu'une fonction normale à la différence qu’on ne va ici pas préciser de nom:
+    </p>
+    <p>
+        <em>
+            <pre>
+        function(){
+            echo 'Fonction anonyme bien exécutée';
+        }
+            </pre>
+        </em>
+    </p>
+    <?php
+        function(){
+            echo 'Fonction anonyme bien exécutée';
+        }
+    ?>
+
+    <h3>Appel d'une fonction anonyme</h3>
+    <p>Depuis PHP 7, il existe trois moyens simples d’appeler une fonction anonyme :
+        <ol>
+            <li>en les auto-invoquant,</li>
+            <li>en les utilisant comme fonctions de rappel,</li>
+            <li>en les utilisant comme valeurs de variables.</li>
+        </ol>
+    </p>
+    <h4>Auto-invoquer une fonction anonyme</h4>
+    <p>Auto-invoquer une fonction anonyme, c’est faire en sorte qu’elle s’appelle elle-même  de manière automatique. Pour cela, il suffit
+        <ul>
+            <li>d’entourer la fonction anonyme d’un premier couple de parenthèses</li>
+            <li>et d’ajouter un autre couple de parenthèses à la suite du premier couple</li>
+        </ul>
+    comme cela :</p>
+    <p>
+        <em>
+            <pre>
+    (function(){
+        echo 'Fonction anonyme bien exécutée';
+    })();
+            </pre>
+        </em>
+    </p>
+    <?php
+    (function(){
+        echo 'Fonction anonyme bien exécutée';
+    })();
+    ?>
+    <p>Créer des fonctions anonymes auto-invoquées est très intéressant <em>lorsqu’on ne voudra  effectuer une tâche qu’une seule fois</em>. Dans ce cas-là, en effet, il n’y a aucun intérêt de créer une fonction classique. </br>
+    Par ailleurs, dans certains codes, <em>nous n’avons pas la possibilité d'appeler une fonction manuellement, il faut alors que la fonction s’exécute automatiquement</em>.</p>
+    <h4>Utiliser une fonction anonyme comme fonction de rappel</h4>
+    <p><u>Une fonction de rappel est une fonction qui va être appelée par une autre fonction</u>.</br>
+    Pour ça, il faut passer la fonction de rappel en argument de la fonction appelante.</br>
+    Les fonctions de rappel peuvent être de simples fonctions nommées, des fonctions anonymes, des méthodes d’objets ou des méthodes statiques <span style="font-size: 0.7em;">(rappel: une méthode statique est une méthode qui ne va pas appartenir à une instance de classe ou à un objet en particulier mais qui va plutôt appartenir à la classe dans laquelle elle a été définie)</span>.</br>
+        <ul>
+            <li>Dans le cas d’une fonction de rappel nommée, nous passerons le nom de la fonction de rappel en argument de la fonction appelante.</li>
+            <li>Dans le cas d’une fonction de rappel anonyme, nous enfermerons la fonction dans une variable qu’on passera en argument de la fonction qui va l’appeler.</li>
+        </ul>
+    <strong>Remarque:</strong> toutes les fonctions n’acceptent pas des fonctions de rappel en arguments.</br>
+    Seulement certaines comme la fonction usort() par exemple qui va servir à trier un tableau en utilisant une fonction de comparaison ou encore la fonction array_map() qui est la fonction généralement utilisée pour illustrer l’intérêt des closures.</br>
+    La fonction array_map() va appliquer une fonction sur des éléments d’un tableau et retourner un nouveau tableau. On devra donc passer deux arguments à celle-ci : une fonction qui sera dans ce cas une closure et un tableau:</p>
+    <p>
+        <em>
+            <pre>
+        Voici une closure appelée $carre: 
+        $carre = function(float $x){
+            return $x**2;
+        };
+
+        $montableau = [1, 2, 3, 4];
+        $nouveauTableau = array_map($carre, $montableau);
+        print_r($nouveauTableau);
+            </pre>
+        </em>
+    </p>
+    <?php
+        // Voici une closure:
+        $carre = function(float $x){
+            return $x**2;
+        };
+
+        $montableau = [1, 2, 3, 4];
+        $nouveauTableau = array_map($carre, $montableau);
+        echo '<pre> Le nouveau tableau: </br>';
+        print_r($nouveauTableau);
+        echo '</pre>';
+    ?>
+    <h4>Appeler des fonctions anonymes en utilisant des variables</h4>
+    <p><u>Lorsqu’on assigne une fonction anonyme en valeur de variable, cette variable va automatiquement devenir un objet de la classe prédéfinie <em>Closure</em></u>.</br>
+    La classe <em>Closure</em> possède des méthodes qui permettent de contrôler une closure après sa création.</br>
+    Cette classe possède également une méthode magique <em>__invoke()</em> qui s'avère très utile puisqu’elle permet d'exécuter les closures simplement. <span style="font-size: 0.7em;">Rappel: la méthode <em>__invoke()</em> s’exécute dès qu’on se sert d’un objet comme d’une fonction</span>.</br>
+    Cela va permettre d’utiliser la syntaxe suivante pour appeler les fonctions anonymes:</p>
+    <p>
+        <em>
+            <pre>
+        $texte = function(){
+            echo 'Exécution d\'une fonction anonyme en utilisant une variable.';
+        };
+        $texte();
+            </pre>
+        </em>
+    </p>
+    <?php
+        $texte = function(){
+            echo 'Exécution d\'une fonction anonyme en utilisant une variable.';
+        };
+        $texte();
+    ?>
+
+    <h2>Définition et intérêt des classes anonymes</h2>
 </body>
 </html>
