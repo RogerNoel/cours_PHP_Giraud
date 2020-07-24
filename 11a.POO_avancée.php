@@ -157,7 +157,7 @@
     <h2>Définition et intérêt des classes anonymes</h2>
     <p>Les classes anonymes ont été implémentées récemment en PHP, puisque leur support n’a été ajouté qu’avec le PHP 7.</br>
     Les classes anonymes sont des classes qui ne possèdent pas de nom. On peut les stocker dans une variable. <u>Elles sont utiles dans le cas ou des objets simples et uniques ont besoin d’être créés à la volée (??? mais encore ...)</u>.</br>
-    Créer des classes anonymes sert donc principalement à faire gagner du temps. On passera des arguments aux classes anonymes via la méthode constructeur et celles-ci pourront étendre d’autres classes ou encore implémenter des interfaces et (???)<em>utiliser des traits</em>(???) comme le ferait une classe ordinaire.</br>
+    Créer des classes anonymes sert donc principalement à faire gagner du temps. On passera des arguments aux classes anonymes via la méthode constructeur et celles-ci pourront étendre d’autres classes ou encore implémenter des interfaces et <em>utiliser des traits (cette notion sera vue plus loin dans le chapitre)</em> comme le ferait une classe ordinaire.</br>
     Notez qu’on pourra aussi imbriquer une classe anonyme à l’intérieur d’une autre classe. Toutefois, on n’aura dans ce cas pas accès aux méthodes ou propriétés privées ou protégées de la classe contenante. Pour utiliser des méthodes ou propriétés protégées de la classe contenante, la classe anonyme doit étendre celle-ci. Pour utiliser les propriétés privées de la classe contenant dans la classe anonyme, il faudra les passer via le constructeur.</p>
     <h3>Exemples</h3>
     <p>Création d'une classe anonyme stockée dans une variable qui devient de fait un objet:</p>

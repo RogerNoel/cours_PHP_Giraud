@@ -1,5 +1,5 @@
 <?php
-abstract class Utilisateur11{
+abstract class Utilisateur12{
     protected $user_name;
     protected $user_region;
     protected $prix_abo;
@@ -13,6 +13,14 @@ abstract class Utilisateur11{
     public function __destruct()
     {
         // code ici
+    }
+    public static function statut()
+    {
+        echo 'Utilisateur';
+    }
+    public static function getStatut()
+    {
+        self::Statut();
     }
     public function getNom()
     {

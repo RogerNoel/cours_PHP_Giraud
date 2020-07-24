@@ -84,5 +84,59 @@
     <p>Par définition, une classe finale est une classe dont l’implémentation est complète puisqu’en la déclarant comme finale on indique qu’on ne souhaite pas qu’elle puisse être étendue. Ainsi, aucune méthode abstraite n’est autorisée dans une classe finale.</p>
 
     <h2>Résolution statique à la volée - late static bindings</h2>
+    <p>La résolution statique à la volée permet de faire référence à la classe réellement appelée dans un contexte d’héritage statique. En effet, lorsqu’on utilise le <em>self::</em> pour faire référence à la classe courante dans un contexte statique, la classe utilisée sera toujours celle dans laquelle sont définies les méthodes utilisant <em>self::</em>. Cela peut parfois produire des comportements inattendus. Regardez plutôt l’exemple cidessous pour vous en convaincre.</p>
+    <p>Voici deux nouvelles méthodes dans la classe <em>Utilisateur12</em>:</p>
+    <p>
+        <em>
+            <pre>
+    public static function statut()
+    {
+        echo 'Utilisateur';
+    }
+    public static function getStatut()
+    {
+        self::getStatut();
+    }
+            </pre>
+        </em>
+    </p>
+    <p>La méthode <em>statut()</em> de la classe <em>Utilisateur12</em> renvoie le mot « Utilisateur ». La méthode <em>getStatut()</em> sert a exécuter la méthode <em>statut()</em> de la classe courante.</p>
+    <p>On surcharge la méthode <em>statut()</em> dans la classe étendue <em>Admin12</em> pour qu'elle renvoie le texte « Admin »:</p>
+    <p>
+        <em>
+            <pre>
+public static function statut()
+{
+    echo 'Admin';
+}
+            </pre>
+        </em>
+    </p>
+    <p>Finalement, dans notre script principal, on appelle la méthode <em>getStatut()</em> depuis la classe Admin: </p>
+    <p>
+        <em>
+            <pre>Admin12::getStatut();</pre>
+        </em>
+    </p>
+    <p>... et cela renvoie:</p>
+    <?php
+        Admin12::getStatut();
+    ?>
+    <p>On constate que le résultat renvoyé est « Utilisateur » et non pas « Admin » comme on aurait pu le penser. Cela est dû au fait que le code <em>self::</em> dans la méthode <eml>getStatut()</eml> va toujours faire référence à la classe dans laquelle la méthode a été définie, c’est-à-dire la classe <em>Utilisateur12</em>.</br>
+    Ainsi, <em>self::statut()</em> sera toujours l’équivalent de <em>Utilisateur::statut()</em> et <u>renverra toujours la valeur de la méthode statut() définie dans la classe Utilisateur</u>.</br>
+    <strong>La résolution statique à la volée a été introduite justement pour dépasser ce problème précis et pour pouvoir faire référence à la classe réellement utilisée.</strong></p>
+    <h3>Utilisation de la résolution statique à la volée et de static::</h3>
+    <p>La résolution statique à la volée <u>permet de faire référence à la classe réellement utilisée dans un contexte statique</u>.</br>
+    Pour utiliser la résolution statique à la volée, il faut utiliser le mot clef <em><u>static</u></em> à la place de <em>self</em>. Ce mot clef permet de faire référence à la classe utilisée durant l’exécution de la méthode:</p>
+    <p>
+        <em>
+            <pre>
+    public static function getStatut()
+    {
+        <u>static</u>::getStatut();
+    }
+            </pre>
+        </em>
+    </p>
 </body>
 </html>
