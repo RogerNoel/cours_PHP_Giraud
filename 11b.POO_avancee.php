@@ -196,6 +196,67 @@ public static function statut()
         $monProduit = new Produit13('pécu', 5);
         $monProduit->plusUn();
     ?>
-    
+    <p>Utiliser un trait nous a permis de réutiliser la méthode <em>plusUn()</em> et la propriété <em>$stock</em> dans des classes indépendantes.</p>
+    <h3>Ordre de précédence (ordre de priorité)</h3>
+    <p>Dans le cas où une classe hérite d’une méthode d’une classe mère, cette méthode sera écrasée par une méthode (du même nom, bien évidemment) provenant d’un trait.</br>
+    En revanche, dans le cas où une classe définit elle-même une méthode, celle-ci sera prédominante par rapport à celle du trait.</br>
+        <ul>
+            <li>Ainsi, une <u>méthode issue de la classe elle-même sera prioritaire sur celle venant d’un trait</u></li>
+            <li>et cette méthode provenant d'un trait sera <u>elle-même prédominante par rapport à une méthode héritée d’une classe mère</u>.</li>
+            <li>On peut dégager unee hiérarchie:
+                <ol>
+                    <li>Méthode écrite dans la classe qui a priorité sur tout car
+                        <ol>
+                            <li>elle surcharge une classe héritée,</li>
+                            <li>elle prend le pas sur un trait.</li>
+                        </ol>
+                    </li>
+                    <li>Un trait prend le pas sur une méthode héritée.</li>
+                    <li>Une méthode héritée prendra le pas si elle n'est pas surchargée et qu'il n'existe pas de trait, bref aucune concurrence.</li>
+                </ol>
+            </li>
+        </ul>
+    </p>
+    <h3>Inclusion de plusieurs traits et gestion des conflits</h3>
+    <p>L’un des intérêts principaux des traits est qu’on va pouvoir utiliser plusieurs traits différents dans une même classe. Cependant, <em>cela nous laisse à priori avec le même problème d’héritage multiple vu précédemment et qui interdisait à une classe d’hériter de plusieurs classes parents</em>.</br>
+    En effet, imaginez le cas où une classe utilise plusieurs traits qui définissent une méthode de même nom mais de façon différente. Quelle définition doit alors être choisie par la classe?</br>
+    Dans ce genre de cas, il faudra utiliser l’opérateur <strong><em>insteadof</em></strong> pour choisir explicitement quelle définition de la méthode doit être choisie.</br>
+    Utiliser l’opérateur <em>insteadof</em> permet en fait <em>d’exclure</em> les définitions d’une méthode qui ne devront pas être utilisées.</p>
+    <h4>Illustration</h4>
+    <p>Nous avons:
+        <ul>
+            <li>deux méthodes maMethode() avec du code différent et définies dans:
+                <ul>
+                    <li>Trait1</li>
+                    <li>Trait2</li>
+                </ul>
+            </li>
+            <li>Une classe MaClasse dans laquelle on <em>use</em> les deux traits, et</li>
+            <li>et dans laquelle on met la préséance sur la méthode issue de <em>trait1</em>:</li>
+        </ul>
+    </p>
+    <p><em><pre>
+        classe Maclasse{
+            use Trait1, Trait2 {
+                Trait1::maMethode insteadof Trait2;
+            }
+        }
+    </pre></em></p>
+    <p>Notez que dans le cas (rare) où on souhaite utiliser les différentes définitions de méthodes portant le même nom définies dans différents traits, on peut également utiliser l’opérateur <em>as</em> qui permet d’utiliser une autre version d’une méthode de même nom en lui choisissant un nouveau nom temporaire.</br>
+    Retenez ici bien que <u>l’opérateur <em>as</em> ne renomme pas une méthode en soi</u> mais permet simplement d’utiliser un autre nom pour une méthode <em>juste pour le temps d’une inclusion et d’une exécution</em>: le nom d’origine de la méthode n’est pas modifié.</p>
+    <p><em><pre>
+        classe Maclasse{
+            use Trait1, Trait2 {
+                Trait1::maMethode insteadof Trait2;
+                Trait2::maMethode as myMeth;
+            }
+        }
+    </pre></em></p>
+    <p>Ici, on commence par définir quelle définition de <em>maMethode()</em> doit être utilisée grâce à l’opérateur <em>insteadof</em>. Ensuite, on demande à également utiliser la méthode <em>maMethode()</em> du second trait en l’utilisant sous le nom <em>myMeth()</em> pour éviter les conflits.</br>
+    Une nouvelle fois, il est <u>très rare</u> d’avoir à effectuer ce genre d’opérations mais il reste tout de même bon de les connaitre, ne serait-ce que pour les reconnaitre dans  les codes d’autres développeurs.</br>
+    Par ailleurs, notez qu’on peut également définir une nouvelle visibilité pour une méthode lorsqu’on utilise l’opérateur <em>as</em>. Pour cela, il suffit de préciser la nouvelle visibilité juste avant le nom d’emprunt de la méthode.</p>
+    <h3>Les traits composés (héritage de traits)</h3>
+    <p>Vous devez finalement savoir que <u>des traits peuvent eux-mêmes utiliser d’autres traits</u> et hériter de tout ou d’une partie de ceux-ci.</br>
+    Pour cela, on utilisera à nouveau le mot clef <em>use</em> pour utiliser un trait dans un autre.</p>
 </body>
 </html>
