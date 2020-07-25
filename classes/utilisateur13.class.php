@@ -1,6 +1,7 @@
 <?php
-abstract class Utilisateur12{
-    protected $stock = 0;
+class Utilisateur13{
+    use Inventaire13;
+
     protected $user_name;
     protected $user_region;
     protected $prix_abo;
@@ -8,7 +9,21 @@ abstract class Utilisateur12{
 
     public const ABONNEMENT = 15;
 
-    abstract function setPrixAbo();
+    public function __construct($name, $region, $passe, $stock)
+    {
+        $this->user_name = $name;
+        $this->user_region = $region;
+        $this->user_pass = $passe;
+        $this->stock = $stock;
+    }
+
+    function setPrixAbo(){
+        if($this->user_region!=='Sud'){
+            $this->prix_abo = self::ABONNEMENT/2;
+        } else {
+            $this->prix_abo = self::ABONNEMENT;
+        }
+    }
 
     public function __destruct()
     {
@@ -33,11 +48,6 @@ abstract class Utilisateur12{
     }
     public function moinsUn(){
         $this->stock--;
-        echo 'Stock vaut ' . $this->x . '</br>';
-        return $this;
-    }
-    public function plusUn(){
-        $this->stock++;
         echo 'Stock vaut ' . $this->x . '</br>';
         return $this;
     }

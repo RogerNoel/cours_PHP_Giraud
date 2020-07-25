@@ -138,5 +138,64 @@ public static function statut()
             </pre>
         </em>
     </p>
+
+    <h2>Les traits</h2>
+    <p>Fonctionnalité PHP qui permet de réutiliser du code dans des classes indépendantes.</br>
+    Très simplement, les traits correspondent à un mécanisme nous permettant de réutiliser des méthodes dans des classes indépendantes, repoussant ainsi les limites de l’héritage traditionnel.</br>
+    <em>En effet, rappelez-vous qu’en PHP une classe ne peut hériter que d’une seule classe mère</em>.</br>
+    Or, imaginons que nous devions définir la même opération au sein de plusieurs classes indépendantes, c’est-à-dire des classes qui ne partagent pas de fonctionnalité commune et pour lesquelles il n’est donc pas pertinent de créer une classe mère et de les faire étendre cette classe.</br>
+    <strong>Dans ce cas-là, nous allons être obligé de réécrire le code correspondant à la méthode que ces classes ont en commun dans chacune des classes à moins justement d’utiliser les traits qui permettent à plusieurs classes d’utiliser une même méthode</strong>.</br>
+    Par exemple, on peut imaginer qu’un site marchand possède deux classes <em>Utilisateur13</em> et <em>Produit13</em> qui vont être indépendantes mais qui vont posséder certaines méthodes en commun comme une méthode de comptage <em>plusUn()</em> par exemple.</br>
+    Comme ces classes sont indépendantes et qu’on ne veut donc pas les faire hériter d’une même classe mère, on va être obligé de réécrire le code de notre méthode dans les deux classes si on n’utilise pas les traits.</p>
+    <p>Dans le cas présent, ce n’est pas trop grave mais imaginez maintenant que nous ayons des dizaines de classes utilisant certaines mêmes méthodes… Cela va faire beaucoup de code écrit pour rien et en cas de modification d’une méthode il faudra modifier chaque classe, ce qui est loin d’être optimal!</br>
+    Pour optimiser le code, il sera intéressant d’utiliser les traits.</br>
+    Un trait est semblable -dans l’idée- à une classe mère en ces sens
+        <ul>
+            <li>qu’il sert à grouper des fonctionnalités qui vont être partagées par plusieurs classes,</li>
+            <li>mais, à la différence des classes, on ne va pas pouvoir instancier un trait.</li>
+        </ul>
+    De plus, vous devez bien comprendre que le mécanisme des traits est un ajout à l’héritage «traditionnel» en PHP et que les méthodes contenues dans les traits ne vont pas être «héritées» dans le même sens que ce qu’on a pu voir jusqu’à présent par les différentes classes.</p>
+    <h3>Utiliser les traits en pratique</h3>
+    <p>On définira un trait de façon similaire à une classe, à la différence que nous allons utiliser le mot clef <strong>trait</strong> suivi du nom de notre trait:</br>
+    <em>trait Inventaire{ ... du code comme une classe ... }</em></br>
+    <u>Une bonne pratique consiste à utiliser un nouveau fichier pour chaque nouveau trait</u> (on inclura ensuite les traits dans les classes qui en ont besoin).</br>
+    Pour notre exemple, on peut déjà créer un trait qu’on va appeler <em>Inventaire13</em>:</p>
+    <p>
+        <em>
+            <pre>
+    trait Inventaire13{
+        protected $stock;
+
+        public function plusUn(){
+            $this->stock++;
+            echo 'Stock vaut ' . $this->x;
+            return $this;
+        }
+    }
+            </pre>
+        </em>
+    </p>
+    Notez qu’on peut tout à fait inclure des propriétés dans nos traits. Il faut cependant faire bien attention à la visibilité de celles-ci et ne pas abuser de cela au risque d’avoir un code au final moins clair et plus faillible.</br>
+    <u>Notez</u> également que si on définit une propriété dans un trait, alors on ne peut pas à nouveau définir une propriété de même nom dans une classe utilisant notre trait à moins que la propriété possède la même visibilité et la même valeur initiale.</p>
+    <p>Une fois le trait défini, nous devons préciser une <strong>instruction <em>use</em></strong>. pour pouvoir l’utiliser dans les différentes classes qui vont en avoir besoin. Il faut également supprimer la propriété <em>$stock</em> et la méthode <em>plusUn()</em> de ces classes.</p>
+    <p>
+        <em>
+            <pre>
+        require './traits/inventaire13.trait.php';
+        $monUtilisateur = new Utilisateur13('client', "nord", '222', 10);
+        $monUtilisateur->plusUn();
+        $monProduit = new Produit13('pécu', 5);
+        $monProduit->plusUn();
+            </pre>
+        </em>
+    </p>
+    <?php
+        require './traits/inventaire13.trait.php';
+        $monUtilisateur = new Utilisateur13('client', "nord", '222', 10);
+        $monUtilisateur->plusUn();
+        $monProduit = new Produit13('pécu', 5);
+        $monProduit->plusUn();
+    ?>
+    
 </body>
 </html>
