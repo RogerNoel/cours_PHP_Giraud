@@ -64,7 +64,7 @@
     <strong><u>Rappel:</u></strong> une interface n’est qu’un plan de base qui spécifie une liste de méthodes que les classes qui implémentent l’interface devront définir.</br>
     Les interfaces prédéfinies comme <em>Iterator</em> ne servent donc qu’à produire un code plus compréhensible et plus structuré (notamment car les autres développeurs vont «reconnaître» l’utilisation d’une interface prédéfinie et donc immédiatement comprendre ce qu’on cherche à faire). Nous devrons donc définir les méthodes définies dans <em>Iterator</em> dans la classe qui implémente cette interface.</br>
     Généralement, on se basera sur le nom des méthodes pour définir une implémentation cohérente et utile. En effet, vous devez savoir que <u>les fonctions <em>current(), next(), rewind() et key()</em> existent toutes déjà en tant que fonctions prédéfinies en PHP</u>. Nous allons donc les utiliser pour définir l’implémentation de nos méthodes.</p>
-    <p><em>Voir ici création de la classe en PHP</em></p>
+
     <p>Voici le code de test:</p>
     <p>
         <em>
@@ -78,6 +78,7 @@
             </pre>
         </em>
     </p>
+    <p style="color: red;"><em>Voir ici création de la classe en PHP</em></p>
     <?php
         class Pwet0008 implements Iterator{
             private $tableau = [];
@@ -108,25 +109,26 @@
             }
 
             public function current()
-            // retourne la VALEUR de l’élément courant du tableau, c’est-à-dire de l’élément actuellement parcouru (l’élément au niveau duquel est situé le pointeur interne du tableau).
             {
                 $tableau = current($this->tableau);
+                // current() retourne la VALEUR de l’élément courant du tableau, c’est-à-dire de l’élément actuellement parcouru (l’élément au niveau duquel est situé le pointeur interne du tableau).
                 echo 'Elément actuel: ' . $tableau . '.</br>';
                 return $tableau;
             }
 
             public function key()
-            // retourne la CLEF liée à la valeur de l’élément courant du tableau.
+            
             {
                 $tableau = key($this->tableau);
+                // key() retourne la CLEF liée à la valeur de l’élément courant du tableau.
                 echo 'Clé: ' . $tableau . '.</br>';
                 return $tableau;
             }
 
             public function next()
-            // avance le pointeur d’un élément et retourne la VALEUR de l’élément au niveau duquel se situe le pointeur.
             {
                 $tableau = next($this->tableau);
+                // next() avance le pointeur d’un élément et retourne la VALEUR de l’élément au niveau duquel se situe le pointeur.
                 echo 'Elément suivant: ' . $tableau . '.</br>';
                 return $tableau;
             }
@@ -151,12 +153,12 @@
     <p>La fonction <strong>next()</strong> avance le pointeur interne d’un tableau d’un élément et retourne la valeur de l’élément au niveau duquel se situe le pointeur.</p>
     <p>Une fois la classe définie, on l’instancie en lui passant un tableau associatif qui va être utilisé comme argument pour le constructeur.</br>
     Finalement, on utilise une boucle <em>foreach</em> pour parcourir l’objet créé à partir de la classe.</p>
-    <p>Ce qu’il faut alors bien comprendre est que le <strong>PHP a un comportement bien défini</strong> lorsqu’on utilise un objet qui implémente l’interface <em>Iterator</em> et notamment lorsqu’on essaie de le parcourir avec une boucle foreach.</br>
+    <p style="font-size: 1.1em;">Ce qu’il faut alors bien comprendre est que le <strong>PHP a un comportement bien défini</strong> lorsqu’on utilise un objet qui implémente l’interface <em>Iterator</em> et notamment lorsqu’on essaie de le parcourir avec une boucle foreach.</br>
     Expliquons précisément ce qui se passe dans le cas présent. Tout d’abord, on sait qu’une interface impose aux classes qui l’implémentent de définir toutes ses méthodes.</br>
     Lorsqu’on crée un objet qui implémente l’interface <em>Iterator</em>, le PHP sait donc que l’objet va posséder des méthodes rewind(), current(), key(), next() et valid() et il va donc pouvoir les exécuter <strong>selon un ordre prédéfini</strong>. </br>
     Lorsqu’on utilise une boucle <em>foreach</em> avec un objet qui implémente l’interface <em>Iterator</em>, le PHP va <strong>automatiquement</strong> 
         <ul>
-            <li>commencer par appeler <em>Iterator::rewind()</em> avant le premier passage dans la boucle ce qui va dans notre cas <em>echo</em> le texte <em>Retour au début du tableau</em> et va placer le pointeur interne du tableau au début de celui-ci,</li>
+            <li>commencer par appeler <em>Iterator::rewind()</em> avant le premier passage dans la boucle ce qui va dans notre cas afficher le texte <em>Retour au début du tableau</em> et va placer le pointeur interne du tableau au début de celui-ci,</li>
             <li>ensuite, avant chaque nouveau passage dans la boucle, <em>Iterator::valid()</em> est appelée et si false est retourné, on sort de la boucle,</li>
             <li>Dans le cas contraire,
                 <ul>
@@ -167,5 +169,138 @@
             <li>Finalement, après chaque passage dans la boucle, <em>Iterator::next()</em> est appelée et on recommence l’appel aux mêmes méthodes dans le même ordre (excepté pour <em>rewind()</em> qui n’est appelée qu’une fois en tout début de boucle).</li>
         </ul>
     </p>
+        <!-- ------------------------------------------------ -->
+    <h2>Passage d’objets : identifiants et références</h2>
+    <h3>Le passage de variables par valeur ou par <em>référence</em> (alias)</h3>
+    <p>Nous avons vu qu’il existe deux façons de passer une variable (à une fonction par exemple) en PHP : 
+        <ul>
+            <li>on peut la passer par valeur (ce qui est le comportement par défaut),</li>
+            <li>ou la passer par référence en utilisant le symbole <strong>&</strong>  devant le nom de la variable.</li>
+        </ul>
+    Lorsqu’on parle de <em>passage par référence</em> en PHP, on devrait en fait plutôt parler d’<strong>alias</strong> au sens strict du terme pour être cohérent par rapport à la plupart des autres langages de programmation.</br>
+    Un <em>alias</em> est un moyen d’accéder au contenu d’une même variable en utilisant un autre nom. Pour le dire simplement, créer un alias signifie déclarer un autre nom de variable qui va partager la même valeur que la variable de départ.</br>
+    Ainsi, lorsqu’on modifie la valeur de l’alias, on modifie également la valeur de la variable de base puisque ces deux éléments partagent la même valeur.</br>
+    <u>Au contraire</u>, lorsqu’on passe une variable par valeur (ce qui est le comportement par défaut en PHP), on travaille avec une « copie » de la variable de départ: les deux copies sont alors indépendantes et lorsqu’on modifie le contenu de la copie, le contenu de la variable d’origine n’est pas modifié.</br>
+    Démonstration (voir code PHP):</p>
+    <?php
+        $x=1;
+        $y=$x;  // $y vaut 1
+        $z=&$y;  // $z et $y auront toujours la même valeur: la dernière mise à jour
+        $y=2;   // $z et $y valent 2
+        $a=1;
+        $b=2;
+        $z=6;
+        echo '$y vaut ' . $y .'</br>';
+        $y=22;
+        echo '$z vaut ' . $z .'</br>';
+
+        // passage par valeur
+        function passageParValeur($param){
+            $param = 5;
+            echo '1. Valeur du paramètre $a dans la fonction = ' . $param . '</br>';
+        }
+
+        passageParValeur($a);
+
+        echo '2. Valeur du paramètre $a hors de la fonction = ' . $a . '</br>';
+
+        // passage par référence
+        
+        function passageParReference(&$param){
+            $param = 7;
+            echo '3. Valeur du paramètre dans la fonction = ' . $param . '</br>';
+        }
+        
+        passageParReference($x);
+
+        echo '4. Valeur du paramètre hors de la fonction = ' . $x . '</br>';
+
+        passageParReference($z);
+
+        echo 'Valeur du paramètre hors de la fonction = ' . $z . '</br>';
+        echo 'Valeur du paramètre hors de la fonction = ' . $y . '</br>';
+    ?>
+    <h3>Le passage des objets en PHP</h3>
+    <p>Lorsqu’on crée une nouvelle instance de classe en PHP et qu’on assigne le résultat dans une variable, <u>on assigne pas véritablement l’objet en soi</u> à notre variable objet mais simplement un <strong>identifiant</strong> d’objet qu’on appelle également parfois un <em>pointeur</em>.</br>
+    Cet identifiant sera utilisé pour accéder à l’objet en soi.</br>
+    <u>La variable objet créée stocke donc un identifiant d’objet</u> qui permet lui-même d’accéder aux propriétés de l’objet.</br>
+    Pour accéder à l’objet via son identifiant, on va utiliser l’opérateur <em>-></em> qu’on connait bien. Ainsi,
+        <ul>
+            <li>lorsqu’on passe une variable objet en argument d’une fonction,</li>
+            <li>lorsqu’on demande à une fonction de retourner une variable objet,</li>
+            <li>lorsqu’on assigne une variable objet à une autre variable objet,</li>
+        </ul>
+    ce sont des <u>copies</u> de l’identifiant pointant vers le même objet qui sont passées.</br>
+    Comme les copies de l’identifiant pointent toujours vers le même objet, on dit que <em>les objets sont passés par référence</em>. Ce n’est cependant pas strictement vrai: encore une fois, ce sont des identifiants d’objets pointant vers le même objet qui vont être passés par valeur.</p>
+    <p>Regardez plutôt l’exemple suivant:</p>
+    <p>
+        <em>
+            <pre>
+        class Utilisateur{
+            protected $user_name;
+            public function __construct($name)
+            {
+                $this->user_name = $name;
+            }
+            public function getNom(){
+                echo $this->user_name;
+            }
+            public function setNom($name){
+                $this->user_name = $name;
+            }
+        }
+        $roger = new Utilisateur('Roger');
+        $roger->getNom();           // Roger
+        $roger->setNom('Tom');  
+        $roger->getNom();           // Tom
+        $autre = $roger;
+        $autre->getNom();           // Tom
+        $autre->setNom('Tarzan');
+        $roger->getNom();           // Tarzan
+            </pre>
+        </em>
+    </p>
+    <p>En effet, <em>$roger</em> et <em>$autre</em> contiennent deux copies d’identifiant <u>permettant d’accéder au même objet</u>. C’est la raison pour laquelle le résultat ici peut faire penser que les objets ont été passés par référence. Ce n’est toutefois pas le cas, <u>ce sont des copies d’identifiant pointant vers le même objet</u> qui sont passées par valeur.</br>
+    Pour passer un identifiant d’objet par référence, nous utiliserons le signe <strong>&</strong>.</p>
+    <p>Regardez le nouvel exemple ci-dessous pour bien comprendre la différence entre un passage par référence et un passage par valeur via un identifiant:</p>
+    <p>
+        <em>
+            <pre>
+        class test2{
+            public $x = 1;
+            public function modif(){
+                $this->x = 2;
+            }
+        }
+
+        function tesZero($obj){
+            $obj = 0;
+        }
+
+        function tesVraimentZero(&$obj){
+            $obj = 0;
+        }
+
+        $luke = new test2;
+        $luke->modif();
+        echo 'Après modif(): ';     // object(test2)[3] public 'x' => int 2
+        var_dump($luke);
+        tesZero($luke);
+        echo 'Après tesZero(): ';  // object(test2)[3] public 'x' => int 2
+        var_dump($luke);
+        tesVraimentZero($luke);
+        echo 'Après tesVraimentZero(): '; // int 0
+        var_dump($luke);
+                </pre>
+        </em>
+    </p>
+    <p>On définit une classe <em>test2</em> qui contient une propriété et une méthode publiques et on instancie la classe puis on assigne l’identifiant d’objet à la variable objet $luke.</br>
+    On définit également deux fonctions en dehors de la classe.</br>
+    On appelle ensuite la méthode <em>modif()</em> dont le rôle est de modifier la valeur de la propriété $x de l’objet courant puis on affiche les informations relatives à la objet grâce à <em>var_dump()</em>: on constate que la propriété $x stocke bien la valeur 2.</br>
+    Ensuite, on utilise la fonction <em>tesZero()</em> en lui passant $luke en argument: le rôle de cette fonction est d’assigner la valeur 0 à la variable passée en argument.</br>
+    <u>Pourtant, lorsqu’on <em>var_dump()</em> à nouveau $luke, on s’aperçoit que le même objet que précédemment est renvoyé</u>: cela est dû au fait qu’ici la fonction <em>tesZero()</em> n’a modifié que l’identifiant d’objet et non pas l’objet en soi.</br>
+    La fonction <em>tesVraimentZero()</em> utilise -elle- le passage par référence <strong>&</strong>. Dans ce cas-là, c’est bien une référence à l’objet qui va être passée et on va donc bien pouvoir écraser l’objet cette fois-ci.</br>
+    Précisons ici que ces notions sont des notions abstraites et complexes et qu’il faut généralement beaucoup de pratique et une très bonne connaissance au préalable du langage pour bien les comprendre et surtout comprendre leurs implications.</br>
+    Si certaines choses vous échappent pour le moment, c’est tout à fait normal, car il faut du temps et du recul pour maitriser parfaitement un langage.</p>
 </body>
 </html>
