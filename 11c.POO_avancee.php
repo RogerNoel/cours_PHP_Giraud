@@ -170,18 +170,18 @@
         </ul>
     </p>
         <!-- ------------------------------------------------ -->
-    <h2>Passage d’objets : identifiants et références</h2>
-    <h3>Le passage de variables par valeur ou par <em>référence</em> (alias)</h3>
+    <h2>Passage d’objets (en arguments) : identifiants et références</h2>
+    <h3>Le passage (en arguments) de variables par valeur ou par <em>référence</em> (alias)</h3>
     <p>Nous avons vu qu’il existe deux façons de passer une variable (à une fonction par exemple) en PHP : 
         <ul>
             <li>on peut la passer par valeur (ce qui est le comportement par défaut),</li>
             <li>ou la passer par référence en utilisant le symbole <strong>&</strong>  devant le nom de la variable.</li>
         </ul>
     Lorsqu’on parle de <em>passage par référence</em> en PHP, on devrait en fait plutôt parler d’<strong>alias</strong> au sens strict du terme pour être cohérent par rapport à la plupart des autres langages de programmation.</br>
-    Un <em>alias</em> est un moyen d’accéder au contenu d’une même variable en utilisant un autre nom. Pour le dire simplement, créer un alias signifie déclarer un autre nom de variable qui va partager la même valeur que la variable de départ.</br>
+    <u>Un <em>alias</em> est un moyen d’accéder au contenu d’une même variable en utilisant un autre nom</u>. Pour le dire simplement, créer un alias signifie déclarer un autre nom de variable qui va partager la même valeur que la variable de départ.</br>
     Ainsi, lorsqu’on modifie la valeur de l’alias, on modifie également la valeur de la variable de base puisque ces deux éléments partagent la même valeur.</br>
     <u>Au contraire</u>, lorsqu’on passe une variable par valeur (ce qui est le comportement par défaut en PHP), on travaille avec une « copie » de la variable de départ: les deux copies sont alors indépendantes et lorsqu’on modifie le contenu de la copie, le contenu de la variable d’origine n’est pas modifié.</br>
-    Démonstration (voir code PHP):</p>
+    Démonstration (<span style="color: red;">voir code PHP</span>):</p>
     <?php
         $x=1;
         $y=$x;  // $y vaut 1
@@ -194,44 +194,45 @@
         $y=22;
         echo '$z vaut ' . $z .'</br>';
 
-        // passage par valeur
+        echo '<u>Passage par valeur</u>:</br>';
+
         function passageParValeur($param){
             $param = 5;
-            echo '1. Valeur du paramètre $a dans la fonction = ' . $param . '</br>';
+            echo 'Valeur du paramètre dans la fonction = ' . $param . '</br></br>';
         }
 
         passageParValeur($a);
 
-        echo '2. Valeur du paramètre $a hors de la fonction = ' . $a . '</br>';
+        echo 'Valeur du paramètre $a hors de la fonction = ' . $a . '</br></br>';
 
-        // passage par référence
+        echo '<u>Passage par référence</u>:</br>';
         
         function passageParReference(&$param){
             $param = 7;
-            echo '3. Valeur du paramètre dans la fonction = ' . $param . '</br>';
+            echo 'Valeur du paramètre dans la fonction = ' . $param . '</br></br>';
         }
         
         passageParReference($x);
 
-        echo '4. Valeur du paramètre hors de la fonction = ' . $x . '</br>';
+        echo 'Valeur du paramètre hors de la fonction = ' . $x . '</br></br>';
 
         passageParReference($z);
 
-        echo 'Valeur du paramètre hors de la fonction = ' . $z . '</br>';
-        echo 'Valeur du paramètre hors de la fonction = ' . $y . '</br>';
+        echo 'Valeur du paramètre $z hors de la fonction = ' . $z . '</br>';
+        echo 'Valeur du paramètre $y hors de la fonction = ' . $y . '</br>';
     ?>
     <h3>Le passage des objets en PHP</h3>
     <p>Lorsqu’on crée une nouvelle instance de classe en PHP et qu’on assigne le résultat dans une variable, <u>on assigne pas véritablement l’objet en soi</u> à notre variable objet mais simplement un <strong>identifiant</strong> d’objet qu’on appelle également parfois un <em>pointeur</em>.</br>
     Cet identifiant sera utilisé pour accéder à l’objet en soi.</br>
-    <u>La variable objet créée stocke donc un identifiant d’objet</u> qui permet lui-même d’accéder aux propriétés de l’objet.</br>
-    Pour accéder à l’objet via son identifiant, on va utiliser l’opérateur <em>-></em> qu’on connait bien. Ainsi,
+    <u>La variable objet créée stocke donc un identifiant d’objet (<em>pointeur</em>)</u> qui permet lui-même d’accéder aux propriétés de l’objet.</br>
+    Pour accéder à l’objet via son identifiant (<em>pointeur</em>), on va utiliser l’opérateur <em>-></em> qu’on connait bien. Ainsi,
         <ul>
             <li>lorsqu’on passe une variable objet en argument d’une fonction,</li>
             <li>lorsqu’on demande à une fonction de retourner une variable objet,</li>
             <li>lorsqu’on assigne une variable objet à une autre variable objet,</li>
         </ul>
-    ce sont des <u>copies</u> de l’identifiant pointant vers le même objet qui sont passées.</br>
-    Comme les copies de l’identifiant pointent toujours vers le même objet, on dit que <em>les objets sont passés par référence</em>. Ce n’est cependant pas strictement vrai: encore une fois, ce sont des identifiants d’objets pointant vers le même objet qui vont être passés par valeur.</p>
+    ce sont des <u>copies</u> de l’identifiant (<em>pointeur</em>) pointant vers le même objet qui sont passées.</br>
+    Comme les copies de l’identifiant (<em>pointeur</em>) pointent toujours vers le même objet, on dit que <em>les objets sont passés par référence</em>. Ce n’est cependant pas strictement vrai: encore une fois, ce sont des identifiants d’objets (<em>pointeur</em>) pointant vers le même objet qui vont être passés par valeur.</p>
     <p>Regardez plutôt l’exemple suivant:</p>
     <p>
         <em>
@@ -260,7 +261,7 @@
             </pre>
         </em>
     </p>
-    <p>En effet, <em>$roger</em> et <em>$autre</em> contiennent deux copies d’identifiant <u>permettant d’accéder au même objet</u>. C’est la raison pour laquelle le résultat ici peut faire penser que les objets ont été passés par référence. Ce n’est toutefois pas le cas, <u>ce sont des copies d’identifiant pointant vers le même objet</u> qui sont passées par valeur.</br>
+    <p>En effet, <em>$roger</em> et <em>$autre</em> contiennent deux copies d’identifiant (<em>pointeurs</em>) <u>permettant d’accéder au même objet</u>. <em><strong>C’est la raison pour laquelle le résultat ici peut faire penser que les objets ont été passés par référence</strong></em>. Ce n’est toutefois pas le cas, <u>ce sont des copies d’identifiant (<em>pointeur</em>) pointant vers le même objet</u> qui sont passées par valeur.</br>
     Pour passer un identifiant d’objet par référence, nous utiliserons le signe <strong>&</strong>.</p>
     <p>Regardez le nouvel exemple ci-dessous pour bien comprendre la différence entre un passage par référence et un passage par valeur via un identifiant:</p>
     <p>
@@ -281,24 +282,24 @@
             $obj = 0;
         }
 
-        $luke = new test2;
-        $luke->modif();
+        $variableObjet = new test2;
+        $variableObjet->modif();
         echo 'Après modif(): ';     // object(test2)[3] public 'x' => int 2
-        var_dump($luke);
-        tesZero($luke);
+        var_dump($variableObjet);
+        tesZero($variableObjet);
         echo 'Après tesZero(): ';  // object(test2)[3] public 'x' => int 2
-        var_dump($luke);
-        tesVraimentZero($luke);
+        var_dump($variableObjet);
+        tesVraimentZero($variableObjet);
         echo 'Après tesVraimentZero(): '; // int 0
-        var_dump($luke);
+        var_dump($variableObjet);
                 </pre>
         </em>
     </p>
-    <p>On définit une classe <em>test2</em> qui contient une propriété et une méthode publiques et on instancie la classe puis on assigne l’identifiant d’objet à la variable objet $luke.</br>
+    <p>On définit une classe <em>test2</em> qui contient une propriété et une méthode publiques et on instancie la classe puis on assigne l’identifiant d’objet à la variable objet $variableObjet.</br>
     On définit également deux fonctions en dehors de la classe.</br>
     On appelle ensuite la méthode <em>modif()</em> dont le rôle est de modifier la valeur de la propriété $x de l’objet courant puis on affiche les informations relatives à la objet grâce à <em>var_dump()</em>: on constate que la propriété $x stocke bien la valeur 2.</br>
-    Ensuite, on utilise la fonction <em>tesZero()</em> en lui passant $luke en argument: le rôle de cette fonction est d’assigner la valeur 0 à la variable passée en argument.</br>
-    <u>Pourtant, lorsqu’on <em>var_dump()</em> à nouveau $luke, on s’aperçoit que le même objet que précédemment est renvoyé</u>: cela est dû au fait qu’ici la fonction <em>tesZero()</em> n’a modifié que l’identifiant d’objet et non pas l’objet en soi.</br>
+    Ensuite, on utilise la fonction <em>tesZero()</em> en lui passant $variableObjet en argument: le rôle de cette fonction est d’assigner la valeur 0 à la variable passée en argument.</br>
+    <u>Pourtant, lorsqu’on <em>var_dump()</em> à nouveau $variableObjet, on s’aperçoit que le même objet que précédemment est renvoyé</u>: cela est dû au fait qu’ici la fonction <em>tesZero()</em> n’a modifié que l’identifiant d’objet <em>(pointeur)</em> et non pas l’objet en soi.</br>
     La fonction <em>tesVraimentZero()</em> utilise -elle- le passage par référence <strong>&</strong>. Dans ce cas-là, c’est bien une référence à l’objet qui va être passée et on va donc bien pouvoir écraser l’objet cette fois-ci.</br>
     Précisons ici que ces notions sont des notions abstraites et complexes et qu’il faut généralement beaucoup de pratique et une très bonne connaissance au préalable du langage pour bien les comprendre et surtout comprendre leurs implications.</br>
     Si certaines choses vous échappent pour le moment, c’est tout à fait normal, car il faut du temps et du recul pour maitriser parfaitement un langage.</p>
